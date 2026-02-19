@@ -67,7 +67,7 @@ export default function LandingPage() {
           {/* ── Floating collage — centered in left panel ── */}
           <div className="pointer-events-none absolute inset-0 bottom-[35%] hidden lg:block">
             {/* Inner wrapper to center the collage cluster */}
-            <div className="relative mx-auto h-full w-full max-w-[540px]">
+            <div className="relative ml-auto h-full w-full max-w-[540px]">
 
               {/* Main phone card — large dog photo */}
               <div className="absolute right-0 top-[4%] h-[320px] w-[210px] rotate-2 rounded-3xl border border-surface-200/60 bg-white shadow-2xl dark:border-surface-700 dark:bg-surface-800">
