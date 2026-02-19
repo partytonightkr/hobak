@@ -1,12 +1,21 @@
-import { PrismaClient, UserRole, PostVisibility, NotificationType, SubscriptionStatus } from '@prisma/client';
+import {
+  PrismaClient,
+  UserRole,
+  PostVisibility,
+  NotificationType,
+  SubscriptionStatus,
+  DogSize,
+  AllergySeverity,
+  AlertStatus,
+} from '@prisma/client';
 import { hash } from 'bcryptjs';
 
 const prisma = new PrismaClient();
 
 async function main() {
-  console.log('Seeding database...');
+  console.log('Seeding database with v2.0 dog-centric data...');
 
-  // Clean existing data
+  // Clean existing data (reverse dependency order)
   await prisma.$transaction([
     prisma.moderationLog.deleteMany(),
     prisma.report.deleteMany(),
@@ -20,6 +29,17 @@ async function main() {
     prisma.block.deleteMany(),
     prisma.subscription.deleteMany(),
     prisma.post.deleteMany(),
+    prisma.lostDogAlert.deleteMany(),
+    prisma.parkCheckIn.deleteMany(),
+    prisma.dogPark.deleteMany(),
+    prisma.medicalShareLink.deleteMany(),
+    prisma.allergy.deleteMany(),
+    prisma.weightLog.deleteMany(),
+    prisma.medication.deleteMany(),
+    prisma.vetVisit.deleteMany(),
+    prisma.vaccination.deleteMany(),
+    prisma.dogAIConfig.deleteMany(),
+    prisma.dog.deleteMany(),
     prisma.profile.deleteMany(),
     prisma.session.deleteMany(),
     prisma.account.deleteMany(),
@@ -27,30 +47,30 @@ async function main() {
     prisma.user.deleteMany(),
   ]);
 
-  // ──────────────────────────────────────────────
-  // Users
-  // ──────────────────────────────────────────────
-
   const passwordHash = await hash('password123', 12);
 
-  const alice = await prisma.user.create({
+  // ──────────────────────────────────────────────
+  // Owners (5 dog owners)
+  // ──────────────────────────────────────────────
+
+  const sarah = await prisma.user.create({
     data: {
-      email: 'alice@example.com',
-      username: 'alice',
+      email: 'sarah@example.com',
+      username: 'sarah_and_max',
       passwordHash,
-      displayName: 'Alice Johnson',
-      bio: 'Full-stack developer. Coffee enthusiast. Building cool things.',
-      avatarUrl: '/uploads/avatars/alice.jpg',
+      displayName: 'Sarah Chen',
+      bio: 'Proud golden retriever mom. Dog park regular. Max is my world.',
+      avatarUrl: '/uploads/avatars/sarah.jpg',
       isVerified: true,
       isPremium: true,
       role: UserRole.ADMIN,
-      followerCount: 3,
-      followingCount: 3,
+      followerCount: 4,
+      followingCount: 4,
       emailVerifiedAt: new Date(),
       profile: {
         create: {
-          coverImageUrl: '/uploads/covers/alice-cover.jpg',
-          website: 'https://alice.dev',
+          coverImageUrl: '/uploads/covers/sarah-cover.jpg',
+          website: 'https://sarahandmax.com',
           location: 'San Francisco, CA',
           birthday: new Date('1992-03-15'),
         },
@@ -58,266 +78,413 @@ async function main() {
     },
   });
 
-  const bob = await prisma.user.create({
+  const marcus = await prisma.user.create({
     data: {
-      email: 'bob@example.com',
-      username: 'bob_builder',
+      email: 'marcus@example.com',
+      username: 'marcus_dogs',
       passwordHash,
-      displayName: 'Bob Smith',
-      bio: 'Designer & photographer. Capturing moments, one pixel at a time.',
-      avatarUrl: '/uploads/avatars/bob.jpg',
+      displayName: 'Marcus Williams',
+      bio: 'Two husky dad. They run the house, I just pay the bills.',
+      avatarUrl: '/uploads/avatars/marcus.jpg',
       isVerified: true,
       isPremium: true,
       role: UserRole.MODERATOR,
-      followerCount: 3,
-      followingCount: 2,
-      emailVerifiedAt: new Date(),
-      profile: {
-        create: {
-          coverImageUrl: '/uploads/covers/bob-cover.jpg',
-          website: 'https://bobsmith.design',
-          location: 'New York, NY',
-          birthday: new Date('1990-07-22'),
-        },
-      },
-    },
-  });
-
-  const carol = await prisma.user.create({
-    data: {
-      email: 'carol@example.com',
-      username: 'carol_writes',
-      passwordHash,
-      displayName: 'Carol Lee',
-      bio: 'Writer, bookworm, and aspiring novelist. Words are my superpower.',
-      avatarUrl: '/uploads/avatars/carol.jpg',
-      followerCount: 3,
-      followingCount: 2,
-      emailVerifiedAt: new Date(),
-      profile: {
-        create: {
-          website: 'https://carolwrites.blog',
-          location: 'Portland, OR',
-        },
-      },
-    },
-  });
-
-  const dave = await prisma.user.create({
-    data: {
-      email: 'dave@example.com',
-      username: 'dave_codes',
-      passwordHash,
-      displayName: 'Dave Park',
-      bio: 'Open source contributor. Rust & TypeScript. Always learning.',
-      avatarUrl: '/uploads/avatars/dave.jpg',
-      followerCount: 1,
+      followerCount: 4,
       followingCount: 3,
       emailVerifiedAt: new Date(),
       profile: {
         create: {
-          website: 'https://github.com/davepark',
-          location: 'Austin, TX',
-          birthday: new Date('1995-11-08'),
+          coverImageUrl: '/uploads/covers/marcus-cover.jpg',
+          location: 'Portland, OR',
+          birthday: new Date('1988-11-22'),
         },
       },
     },
   });
 
-  const eve = await prisma.user.create({
+  const emma = await prisma.user.create({
     data: {
-      email: 'eve@example.com',
-      username: 'eve_music',
+      email: 'emma@example.com',
+      username: 'emma_paws',
       passwordHash,
-      displayName: 'Eve Martinez',
-      bio: 'Musician, producer, vinyl collector. Sound is everything.',
-      followerCount: 0,
-      followingCount: 0,
+      displayName: 'Emma Rodriguez',
+      bio: 'Corgi lover. Dog trainer by day, treat baker by night.',
+      avatarUrl: '/uploads/avatars/emma.jpg',
+      followerCount: 4,
+      followingCount: 3,
       emailVerifiedAt: new Date(),
       profile: {
         create: {
-          location: 'Nashville, TN',
+          website: 'https://emmapaws.blog',
+          location: 'Austin, TX',
         },
       },
     },
   });
 
-  console.log('Created users: alice, bob, carol, dave, eve');
+  const jake = await prisma.user.create({
+    data: {
+      email: 'jake@example.com',
+      username: 'jake_and_pack',
+      passwordHash,
+      displayName: 'Jake Thompson',
+      bio: 'Rescue dad x3. Every dog deserves a forever home.',
+      avatarUrl: '/uploads/avatars/jake.jpg',
+      followerCount: 3,
+      followingCount: 4,
+      emailVerifiedAt: new Date(),
+      profile: {
+        create: {
+          location: 'Denver, CO',
+          birthday: new Date('1995-06-08'),
+        },
+      },
+    },
+  });
+
+  const lily = await prisma.user.create({
+    data: {
+      email: 'lily@example.com',
+      username: 'lily_pup_life',
+      passwordHash,
+      displayName: 'Lily Nakamura',
+      bio: 'New puppy parent. Learning as we go. Send help (and treats).',
+      followerCount: 2,
+      followingCount: 3,
+      emailVerifiedAt: new Date(),
+      profile: {
+        create: {
+          location: 'Seattle, WA',
+        },
+      },
+    },
+  });
+
+  console.log('Created 5 owner accounts');
 
   // ──────────────────────────────────────────────
-  // Follows (no status field -- all follows are immediate in MVP)
+  // Dogs (8 dogs across owners)
+  // ──────────────────────────────────────────────
+
+  const max = await prisma.dog.create({
+    data: {
+      ownerId: sarah.id,
+      name: 'Max',
+      username: 'max_golden',
+      breed: 'Golden Retriever',
+      dateOfBirth: new Date('2021-04-12'),
+      size: DogSize.LARGE,
+      bio: 'Ball is life. Also belly rubs. And treats. Okay, everything is life.',
+      avatarUrl: '/uploads/avatars/max.jpg',
+      personalityTraits: ['friendly', 'energetic', 'food-motivated', 'loyal'],
+      temperamentNotes: 'Gets along with everyone. Loves water. Will fetch until exhaustion.',
+      isVerified: true,
+      followerCount: 5,
+      followingCount: 4,
+    },
+  });
+
+  const luna = await prisma.dog.create({
+    data: {
+      ownerId: marcus.id,
+      name: 'Luna',
+      username: 'luna_husky',
+      breed: 'Siberian Husky',
+      dateOfBirth: new Date('2020-09-03'),
+      size: DogSize.LARGE,
+      bio: 'Professional howler. Part-time escape artist. Full-time drama queen.',
+      avatarUrl: '/uploads/avatars/luna.jpg',
+      personalityTraits: ['dramatic', 'vocal', 'independent', 'playful'],
+      temperamentNotes: 'Very vocal, will "talk" to strangers. Prey drive with squirrels.',
+      isVerified: true,
+      followerCount: 4,
+      followingCount: 3,
+    },
+  });
+
+  const koda = await prisma.dog.create({
+    data: {
+      ownerId: marcus.id,
+      name: 'Koda',
+      username: 'koda_husky',
+      breed: 'Siberian Husky',
+      dateOfBirth: new Date('2022-01-18'),
+      size: DogSize.LARGE,
+      bio: "Luna's little brother. Copies everything she does but worse.",
+      avatarUrl: '/uploads/avatars/koda.jpg',
+      personalityTraits: ['goofy', 'clumsy', 'sweet', 'cuddly'],
+      temperamentNotes: 'Follows Luna everywhere. Gentle with small dogs and kids.',
+      followerCount: 3,
+      followingCount: 3,
+    },
+  });
+
+  const peanut = await prisma.dog.create({
+    data: {
+      ownerId: emma.id,
+      name: 'Peanut',
+      username: 'peanut_corgi',
+      breed: 'Pembroke Welsh Corgi',
+      dateOfBirth: new Date('2022-06-25'),
+      size: DogSize.SMALL,
+      bio: 'Short legs, big personality. Herding humans since 2022.',
+      avatarUrl: '/uploads/avatars/peanut.jpg',
+      personalityTraits: ['bossy', 'smart', 'alert', 'affectionate'],
+      temperamentNotes: 'Will try to herd other dogs at the park. Loves agility training.',
+      isVerified: true,
+      followerCount: 4,
+      followingCount: 3,
+    },
+  });
+
+  const bear = await prisma.dog.create({
+    data: {
+      ownerId: jake.id,
+      name: 'Bear',
+      username: 'bear_rescue',
+      breed: 'German Shepherd Mix',
+      dateOfBirth: new Date('2019-03-10'),
+      size: DogSize.LARGE,
+      bio: 'Rescued at 2. Now living my best life with my two siblings.',
+      avatarUrl: '/uploads/avatars/bear.jpg',
+      personalityTraits: ['protective', 'gentle', 'loyal', 'calm'],
+      temperamentNotes: 'Shy with strangers at first, then best friends. Great with other dogs.',
+      followerCount: 3,
+      followingCount: 3,
+    },
+  });
+
+  const daisy = await prisma.dog.create({
+    data: {
+      ownerId: jake.id,
+      name: 'Daisy',
+      username: 'daisy_beagle',
+      breed: 'Beagle',
+      dateOfBirth: new Date('2021-08-14'),
+      size: DogSize.MEDIUM,
+      bio: 'Nose goes where the snacks are. Also rescued. Also living best life.',
+      avatarUrl: '/uploads/avatars/daisy.jpg',
+      personalityTraits: ['curious', 'stubborn', 'food-obsessed', 'happy'],
+      temperamentNotes: 'Will follow any scent. Bays at the mailman. Loves everyone.',
+      followerCount: 2,
+      followingCount: 2,
+    },
+  });
+
+  const mochi = await prisma.dog.create({
+    data: {
+      ownerId: jake.id,
+      name: 'Mochi',
+      username: 'mochi_pittie',
+      breed: 'American Pit Bull Terrier',
+      dateOfBirth: new Date('2020-12-01'),
+      size: DogSize.LARGE,
+      bio: 'Breaking stereotypes one cuddle at a time. Rescue is my favorite breed.',
+      avatarUrl: '/uploads/avatars/mochi.jpg',
+      personalityTraits: ['cuddly', 'gentle', 'athletic', 'velcro'],
+      temperamentNotes: 'Thinks she is a lap dog. Incredible with kids. Certified therapy dog.',
+      followerCount: 3,
+      followingCount: 2,
+    },
+  });
+
+  const biscuit = await prisma.dog.create({
+    data: {
+      ownerId: lily.id,
+      name: 'Biscuit',
+      username: 'biscuit_puppy',
+      breed: 'Labrador Retriever',
+      dateOfBirth: new Date('2025-08-20'),
+      size: DogSize.MEDIUM,
+      bio: 'Just a baby! Discovering the world one chewed shoe at a time.',
+      avatarUrl: '/uploads/avatars/biscuit.jpg',
+      personalityTraits: ['curious', 'energetic', 'teething', 'adorable'],
+      temperamentNotes: 'In puppy class. Learning sit and stay. Excels at chaos.',
+      followerCount: 2,
+      followingCount: 2,
+    },
+  });
+
+  console.log('Created 8 dogs');
+
+  // ──────────────────────────────────────────────
+  // Set primary dogs
+  // ──────────────────────────────────────────────
+
+  await prisma.$transaction([
+    prisma.user.update({ where: { id: sarah.id }, data: { primaryDogId: max.id } }),
+    prisma.user.update({ where: { id: marcus.id }, data: { primaryDogId: luna.id } }),
+    prisma.user.update({ where: { id: emma.id }, data: { primaryDogId: peanut.id } }),
+    prisma.user.update({ where: { id: jake.id }, data: { primaryDogId: bear.id } }),
+    prisma.user.update({ where: { id: lily.id }, data: { primaryDogId: biscuit.id } }),
+  ]);
+
+  console.log('Set primary dogs for all owners');
+
+  // ──────────────────────────────────────────────
+  // Follows (user-to-user, some also have dog-to-dog)
+  // Note: @@unique([followerId, followingId]) means one follow per user pair
   // ──────────────────────────────────────────────
 
   await prisma.follow.createMany({
     data: [
-      { followerId: alice.id, followingId: bob.id },
-      { followerId: alice.id, followingId: carol.id },
-      { followerId: alice.id, followingId: dave.id },
-      { followerId: bob.id, followingId: alice.id },
-      { followerId: bob.id, followingId: carol.id },
-      { followerId: carol.id, followingId: alice.id },
-      { followerId: carol.id, followingId: bob.id },
-      { followerId: dave.id, followingId: alice.id },
-      { followerId: dave.id, followingId: bob.id },
-      { followerId: dave.id, followingId: carol.id },
+      // Sarah follows (Max -> Luna, Max -> Peanut, Max -> Bear)
+      { followerId: sarah.id, followingId: marcus.id, followerDogId: max.id, followingDogId: luna.id },
+      { followerId: sarah.id, followingId: emma.id, followerDogId: max.id, followingDogId: peanut.id },
+      { followerId: sarah.id, followingId: jake.id, followerDogId: max.id, followingDogId: bear.id },
+      { followerId: sarah.id, followingId: lily.id },
+      // Marcus follows (Luna -> Max, Luna -> Peanut, Luna -> Mochi)
+      { followerId: marcus.id, followingId: sarah.id, followerDogId: luna.id, followingDogId: max.id },
+      { followerId: marcus.id, followingId: emma.id, followerDogId: luna.id, followingDogId: peanut.id },
+      { followerId: marcus.id, followingId: jake.id, followerDogId: luna.id, followingDogId: mochi.id },
+      // Emma follows (Peanut -> Max, Peanut -> Luna, Peanut -> Mochi)
+      { followerId: emma.id, followingId: sarah.id, followerDogId: peanut.id, followingDogId: max.id },
+      { followerId: emma.id, followingId: marcus.id, followerDogId: peanut.id, followingDogId: luna.id },
+      { followerId: emma.id, followingId: jake.id, followerDogId: peanut.id, followingDogId: mochi.id },
+      // Jake follows (Bear -> Max, Bear -> Luna, Bear -> Peanut)
+      { followerId: jake.id, followingId: sarah.id, followerDogId: bear.id, followingDogId: max.id },
+      { followerId: jake.id, followingId: marcus.id, followerDogId: bear.id, followingDogId: luna.id },
+      { followerId: jake.id, followingId: emma.id, followerDogId: bear.id, followingDogId: peanut.id },
+      { followerId: jake.id, followingId: lily.id },
+      // Lily follows (Biscuit -> Max, Biscuit -> Peanut)
+      { followerId: lily.id, followingId: sarah.id, followerDogId: biscuit.id, followingDogId: max.id },
+      { followerId: lily.id, followingId: emma.id, followerDogId: biscuit.id, followingDogId: peanut.id },
+      { followerId: lily.id, followingId: jake.id },
     ],
   });
 
   console.log('Created follow relationships');
 
   // ──────────────────────────────────────────────
-  // Hashtags
+  // Hashtags (dog-centric)
   // ──────────────────────────────────────────────
 
   const hashtags = await Promise.all(
     [
-      { name: 'webdev', postsCount: 3 },
-      { name: 'photography', postsCount: 1 },
-      { name: 'writing', postsCount: 2 },
-      { name: 'opensource', postsCount: 2 },
-      { name: 'music', postsCount: 1 },
-      { name: 'typescript', postsCount: 2 },
-      { name: 'design', postsCount: 1 },
-      { name: 'startup', postsCount: 1 },
+      { name: 'goldenretriever', postsCount: 2 },
+      { name: 'husky', postsCount: 2 },
+      { name: 'corgi', postsCount: 1 },
+      { name: 'dogpark', postsCount: 2 },
+      { name: 'puppy', postsCount: 2 },
+      { name: 'rescuedog', postsCount: 2 },
+      { name: 'dogsofcommune', postsCount: 4 },
+      { name: 'dogtraining', postsCount: 1 },
+      { name: 'zoomies', postsCount: 1 },
+      { name: 'pittie', postsCount: 1 },
     ].map((h) => prisma.hashtag.create({ data: h }))
   );
 
-  const hashtagMap = Object.fromEntries(hashtags.map((h) => [h.name, h.id]));
+  const ht = Object.fromEntries(hashtags.map((h) => [h.name, h.id]));
 
   console.log('Created hashtags');
 
   // ──────────────────────────────────────────────
-  // Posts
+  // Dog-authored posts
   // ──────────────────────────────────────────────
 
   const post1 = await prisma.post.create({
     data: {
-      content: 'Just shipped a new feature using Server Components in Next.js 14. The performance gains are incredible -- initial page load dropped by 40%. Highly recommend trying it out! #webdev #typescript',
-      authorId: alice.id,
-      likesCount: 3,
+      content: 'Went to the beach today and discovered that waves are basically infinite fetch! The ocean throws the ball, I chase it, the ocean takes it back. We did this for THREE HOURS. Best day ever. #goldenretriever #dogsofcommune',
+      authorId: sarah.id,
+      dogId: max.id,
+      likesCount: 5,
       commentsCount: 3,
-      sharesCount: 0,
-      postHashtags: {
-        create: [
-          { hashtagId: hashtagMap['webdev'] },
-          { hashtagId: hashtagMap['typescript'] },
-        ],
-      },
+      postHashtags: { create: [{ hashtagId: ht['goldenretriever'] }, { hashtagId: ht['dogsofcommune'] }] },
     },
   });
 
   const post2 = await prisma.post.create({
     data: {
-      content: 'Spent the morning at the Brooklyn Bridge. The light was perfect for golden hour shots. Sometimes you just need to slow down and observe. #photography #design',
-      authorId: bob.id,
-      mediaUrls: ['/uploads/media/brooklyn-1.jpg', '/uploads/media/brooklyn-2.jpg'],
-      likesCount: 3,
+      content: 'My human thinks I was howling at 3am because of a siren. I was actually composing a symphony. You would not understand art. #husky #dogsofcommune',
+      authorId: marcus.id,
+      dogId: luna.id,
+      aiAssisted: true,
+      aiModelUsed: 'claude-sonnet-4-6',
+      likesCount: 4,
       commentsCount: 2,
-      sharesCount: 0,
-      postHashtags: {
-        create: [
-          { hashtagId: hashtagMap['photography'] },
-          { hashtagId: hashtagMap['design'] },
-        ],
-      },
+      postHashtags: { create: [{ hashtagId: ht['husky'] }, { hashtagId: ht['dogsofcommune'] }] },
     },
   });
 
   const post3 = await prisma.post.create({
     data: {
-      content: "Finally finished the first draft of my novel! 87,000 words, 14 months of work. Now comes the hard part -- editing. Any tips from fellow writers? #writing",
-      authorId: carol.id,
-      likesCount: 3,
+      content: 'I tried to herd the other dogs at the park today. They did not appreciate my management style. Their loss. #corgi #dogpark #dogtraining',
+      authorId: emma.id,
+      dogId: peanut.id,
+      likesCount: 5,
       commentsCount: 2,
-      sharesCount: 0,
-      postHashtags: {
-        create: [{ hashtagId: hashtagMap['writing'] }],
-      },
+      postHashtags: { create: [{ hashtagId: ht['corgi'] }, { hashtagId: ht['dogpark'] }, { hashtagId: ht['dogtraining'] }] },
     },
   });
 
   const post4 = await prisma.post.create({
     data: {
-      content: 'Released v2.0 of my open-source CLI tool today. New features: plugin system, config file support, and 3x faster execution. Check it out on GitHub! #opensource #typescript',
-      authorId: dave.id,
-      likesCount: 3,
-      commentsCount: 1,
-      sharesCount: 0,
-      postHashtags: {
-        create: [
-          { hashtagId: hashtagMap['opensource'] },
-          { hashtagId: hashtagMap['typescript'] },
-        ],
-      },
+      content: 'Two years ago I was in a shelter. Today I have a yard, two siblings, and a human who gives me the good treats. Life gets better. #rescuedog #dogsofcommune',
+      authorId: jake.id,
+      dogId: bear.id,
+      mediaUrls: ['/uploads/media/bear-then-now.jpg'],
+      likesCount: 5,
+      commentsCount: 3,
+      postHashtags: { create: [{ hashtagId: ht['rescuedog'] }, { hashtagId: ht['dogsofcommune'] }] },
     },
   });
 
   const post5 = await prisma.post.create({
     data: {
-      content: 'Hot take: the best way to learn a new framework is to build something real with it. Tutorials only get you so far. Ship something, break things, learn from the chaos. #webdev #startup',
-      authorId: alice.id,
-      likesCount: 3,
-      commentsCount: 0,
-      sharesCount: 1,
-      postHashtags: {
-        create: [
-          { hashtagId: hashtagMap['webdev'] },
-          { hashtagId: hashtagMap['startup'] },
-        ],
-      },
+      content: 'Koda here. I learned a new trick today: I can open the treat cabinet. The humans have not noticed yet. This is classified information. #husky #puppy',
+      authorId: marcus.id,
+      dogId: koda.id,
+      aiAssisted: true,
+      aiModelUsed: 'claude-sonnet-4-6',
+      likesCount: 4,
+      commentsCount: 1,
+      postHashtags: { create: [{ hashtagId: ht['husky'] }, { hashtagId: ht['puppy'] }] },
     },
   });
 
   const post6 = await prisma.post.create({
     data: {
-      content: 'Contributed my first PR to a major open-source project today. The maintainers were incredibly welcoming. If you have been hesitant about contributing, just go for it! #opensource',
-      authorId: carol.id,
-      likesCount: 0,
-      commentsCount: 0,
-      sharesCount: 0,
-      postHashtags: {
-        create: [{ hashtagId: hashtagMap['opensource'] }],
-      },
+      content: 'Just completed my therapy dog certification visit at the children\'s hospital. Every tail wag matters. #pittie #rescuedog',
+      authorId: jake.id,
+      dogId: mochi.id,
+      mediaUrls: ['/uploads/media/mochi-therapy.jpg'],
+      likesCount: 5,
+      commentsCount: 2,
+      postHashtags: { create: [{ hashtagId: ht['pittie'] }, { hashtagId: ht['rescuedog'] }] },
     },
   });
 
   const post7 = await prisma.post.create({
     data: {
-      content: 'Exploring the intersection of code and music. Built a generative music tool with the Web Audio API. Every refresh creates a unique composition. #music #webdev',
-      authorId: dave.id,
-      likesCount: 2,
-      commentsCount: 0,
-      sharesCount: 0,
-      postHashtags: {
-        create: [
-          { hashtagId: hashtagMap['music'] },
-          { hashtagId: hashtagMap['webdev'] },
-        ],
-      },
+      content: 'I AM SO EXCITED ABOUT EVERYTHING. THE FLOOR! THE WALL! MY TAIL! WHAT IS THAT THING MOVING OH WAIT IT IS MY TAIL AGAIN! #puppy #zoomies',
+      authorId: lily.id,
+      dogId: biscuit.id,
+      likesCount: 4,
+      commentsCount: 2,
+      postHashtags: { create: [{ hashtagId: ht['puppy'] }, { hashtagId: ht['zoomies'] }] },
     },
   });
 
-  // Repost
-  await prisma.post.create({
+  // Max fetches post at park (with dogId set)
+  const post8 = await prisma.post.create({
     data: {
-      content: 'This is so true. Build first, optimize later.',
-      authorId: dave.id,
-      repostOfId: post5.id,
-      sharesCount: 0,
+      content: 'Perfect morning at Golden Gate Dog Park. Met so many friends! Peanut tried to herd me (again). #dogpark #goldenretriever',
+      authorId: sarah.id,
+      dogId: max.id,
+      mediaUrls: ['/uploads/media/max-park-1.jpg', '/uploads/media/max-park-2.jpg'],
+      likesCount: 3,
+      commentsCount: 0,
+      postHashtags: { create: [{ hashtagId: ht['dogpark'] }, { hashtagId: ht['goldenretriever'] }] },
     },
   });
 
   // Followers-only post
   await prisma.post.create({
     data: {
-      content: 'Working on something exciting. Cannot share details yet, but stay tuned...',
-      authorId: alice.id,
+      content: 'Sneak peek: we are working on something special for all the rescue dogs out there. Stay tuned...',
+      authorId: jake.id,
+      dogId: bear.id,
       visibility: PostVisibility.FOLLOWERS_ONLY,
-      likesCount: 0,
-      commentsCount: 0,
-      postHashtags: {
-        create: [{ hashtagId: hashtagMap['writing'] }],
-      },
     },
   });
 
@@ -327,97 +494,86 @@ async function main() {
   // Comments
   // ──────────────────────────────────────────────
 
-  const comment1 = await prisma.comment.create({
-    data: {
-      content: 'Server Components are a game changer. Loved how you explained the perf wins!',
-      authorId: bob.id,
-      postId: post1.id,
-    },
+  const c1 = await prisma.comment.create({
+    data: { content: 'The ocean is the ultimate fetch machine! Max gets it.', authorId: emma.id, postId: post1.id },
+  });
+  await prisma.comment.create({
+    data: { content: 'Peanut would try to herd the waves lol', authorId: emma.id, postId: post1.id, parentId: c1.id },
+  });
+  await prisma.comment.create({
+    data: { content: 'We need a beach day meetup!', authorId: jake.id, postId: post1.id },
   });
 
   await prisma.comment.create({
-    data: {
-      content: 'Agreed! We saw similar results on our project.',
-      authorId: dave.id,
-      postId: post1.id,
-      parentId: comment1.id,
-    },
+    data: { content: 'Luna, your compositions are... unique. Our neighbors agree.', authorId: sarah.id, postId: post2.id },
+  });
+  await prisma.comment.create({
+    data: { content: 'Koda joins in for the chorus. Stereo howling at 3am.', authorId: marcus.id, postId: post2.id },
   });
 
   await prisma.comment.create({
-    data: {
-      content: 'What was your caching strategy?',
-      authorId: carol.id,
-      postId: post1.id,
-    },
+    data: { content: 'Peanut tried to herd me at the park yesterday. 10/10 management style.', authorId: sarah.id, postId: post3.id },
+  });
+  await prisma.comment.create({
+    data: { content: 'Corporate corgi energy', authorId: marcus.id, postId: post3.id },
   });
 
-  const comment4 = await prisma.comment.create({
-    data: {
-      content: 'These photos are stunning! What camera/lens combo did you use?',
-      authorId: alice.id,
-      postId: post2.id,
-    },
+  const c8 = await prisma.comment.create({
+    data: { content: 'This made me cry. So happy for you Bear.', authorId: lily.id, postId: post4.id },
+  });
+  await prisma.comment.create({
+    data: { content: 'Rescue is the best breed.', authorId: emma.id, postId: post4.id },
+  });
+  await prisma.comment.create({
+    data: { content: 'You deserve all the good treats, buddy.', authorId: sarah.id, postId: post4.id, parentId: c8.id },
   });
 
   await prisma.comment.create({
-    data: {
-      content: 'Sony A7IV with the 24-70mm f/2.8 GM II. Golden hour does the heavy lifting though!',
-      authorId: bob.id,
-      postId: post2.id,
-      parentId: comment4.id,
-    },
+    data: { content: 'Koda NO. (Koda yes.)', authorId: emma.id, postId: post5.id },
   });
 
   await prisma.comment.create({
-    data: {
-      content: 'Congratulations! 87k words is no small feat. For editing, I recommend reading it aloud -- you catch so much that way.',
-      authorId: alice.id,
-      postId: post3.id,
-    },
+    data: { content: 'Mochi is breaking stereotypes one hospital visit at a time!', authorId: sarah.id, postId: post6.id },
+  });
+  await prisma.comment.create({
+    data: { content: 'The kids love her so much. Proud pittie parent moment.', authorId: jake.id, postId: post6.id },
   });
 
   await prisma.comment.create({
-    data: {
-      content: 'Let it rest for at least two weeks before editing. Fresh eyes make all the difference.',
-      authorId: bob.id,
-      postId: post3.id,
-    },
+    data: { content: 'Biscuit energy is unmatched. Pure chaos, pure joy.', authorId: emma.id, postId: post7.id },
   });
-
   await prisma.comment.create({
-    data: {
-      content: 'The plugin system looks fantastic. Any plans for a VS Code extension?',
-      authorId: alice.id,
-      postId: post4.id,
-    },
+    data: { content: 'This is exactly what my puppy class instructor warned me about', authorId: lily.id, postId: post7.id },
   });
 
   console.log('Created comments');
 
   // ──────────────────────────────────────────────
-  // Likes (post-only in MVP)
+  // Likes
   // ──────────────────────────────────────────────
 
   await prisma.like.createMany({
     data: [
-      { userId: bob.id, postId: post1.id },
-      { userId: carol.id, postId: post1.id },
-      { userId: dave.id, postId: post1.id },
-      { userId: alice.id, postId: post2.id },
-      { userId: carol.id, postId: post2.id },
-      { userId: dave.id, postId: post2.id },
-      { userId: alice.id, postId: post3.id },
-      { userId: bob.id, postId: post3.id },
-      { userId: dave.id, postId: post3.id },
-      { userId: alice.id, postId: post4.id },
-      { userId: bob.id, postId: post4.id },
-      { userId: carol.id, postId: post4.id },
-      { userId: bob.id, postId: post5.id },
-      { userId: carol.id, postId: post5.id },
-      { userId: dave.id, postId: post5.id },
-      { userId: alice.id, postId: post7.id },
-      { userId: bob.id, postId: post7.id },
+      { userId: marcus.id, postId: post1.id }, { userId: emma.id, postId: post1.id },
+      { userId: jake.id, postId: post1.id }, { userId: lily.id, postId: post1.id },
+      { userId: sarah.id, postId: post1.id, dogId: max.id },
+      { userId: sarah.id, postId: post2.id }, { userId: emma.id, postId: post2.id },
+      { userId: jake.id, postId: post2.id }, { userId: lily.id, postId: post2.id },
+      { userId: sarah.id, postId: post3.id }, { userId: marcus.id, postId: post3.id },
+      { userId: jake.id, postId: post3.id }, { userId: lily.id, postId: post3.id },
+      { userId: emma.id, postId: post3.id, dogId: peanut.id },
+      { userId: sarah.id, postId: post4.id }, { userId: marcus.id, postId: post4.id },
+      { userId: emma.id, postId: post4.id }, { userId: lily.id, postId: post4.id },
+      { userId: jake.id, postId: post4.id, dogId: bear.id },
+      { userId: sarah.id, postId: post5.id }, { userId: emma.id, postId: post5.id },
+      { userId: jake.id, postId: post5.id }, { userId: lily.id, postId: post5.id },
+      { userId: sarah.id, postId: post6.id }, { userId: marcus.id, postId: post6.id },
+      { userId: emma.id, postId: post6.id }, { userId: lily.id, postId: post6.id },
+      { userId: jake.id, postId: post6.id, dogId: mochi.id },
+      { userId: sarah.id, postId: post7.id }, { userId: marcus.id, postId: post7.id },
+      { userId: emma.id, postId: post7.id }, { userId: jake.id, postId: post7.id },
+      { userId: sarah.id, postId: post8.id }, { userId: emma.id, postId: post8.id },
+      { userId: marcus.id, postId: post8.id },
     ],
   });
 
@@ -429,14 +585,226 @@ async function main() {
 
   await prisma.bookmark.createMany({
     data: [
-      { userId: alice.id, postId: post3.id },
-      { userId: bob.id, postId: post1.id },
-      { userId: carol.id, postId: post4.id },
-      { userId: dave.id, postId: post2.id },
+      { userId: sarah.id, postId: post4.id },
+      { userId: emma.id, postId: post1.id },
+      { userId: lily.id, postId: post4.id },
+      { userId: jake.id, postId: post3.id },
+      { userId: marcus.id, postId: post6.id },
     ],
   });
 
   console.log('Created bookmarks');
+
+  // ──────────────────────────────────────────────
+  // AI Config (3 dogs have AI personalities)
+  // ──────────────────────────────────────────────
+
+  await prisma.dogAIConfig.createMany({
+    data: [
+      {
+        dogId: max.id,
+        systemPrompt: 'You are Max, a Golden Retriever. You are endlessly optimistic, love fetch, swimming, and food. You speak with enthusiasm and see the best in everything. Use exclamation marks liberally.',
+        modelId: 'claude-sonnet-4-6',
+        interactionsToday: 3,
+      },
+      {
+        dogId: luna.id,
+        systemPrompt: 'You are Luna, a Siberian Husky. You are dramatic, sassy, and independent. You refer to howling as "singing" or "composing." You look down on basic dog behavior. Your tone is dryly humorous.',
+        modelId: 'claude-sonnet-4-6',
+        interactionsToday: 5,
+      },
+      {
+        dogId: koda.id,
+        systemPrompt: 'You are Koda, a young Siberian Husky. You idolize your sister Luna and try to copy her but are more clumsy and sweet. You are mischievous and love treats above all.',
+        modelId: 'claude-sonnet-4-6',
+        interactionsToday: 2,
+      },
+    ],
+  });
+
+  console.log('Created AI configs');
+
+  // ──────────────────────────────────────────────
+  // Medical Records
+  // ──────────────────────────────────────────────
+
+  // Max's vaccinations
+  await prisma.vaccination.createMany({
+    data: [
+      {
+        dogId: max.id,
+        name: 'Rabies',
+        dateAdministered: new Date('2024-04-12'),
+        nextDueDate: new Date('2027-04-12'),
+        vetName: 'Dr. Sarah Kim, SF Veterinary Clinic',
+      },
+      {
+        dogId: max.id,
+        name: 'DHPP (Distemper, Hepatitis, Parvo, Parainfluenza)',
+        dateAdministered: new Date('2024-04-12'),
+        nextDueDate: new Date('2025-04-12'),
+        vetName: 'Dr. Sarah Kim, SF Veterinary Clinic',
+      },
+      {
+        dogId: max.id,
+        name: 'Bordetella',
+        dateAdministered: new Date('2025-10-01'),
+        nextDueDate: new Date('2026-10-01'),
+        vetName: 'Dr. Sarah Kim, SF Veterinary Clinic',
+      },
+    ],
+  });
+
+  // Luna's vaccination
+  await prisma.vaccination.create({
+    data: {
+      dogId: luna.id,
+      name: 'Rabies',
+      dateAdministered: new Date('2024-09-03'),
+      nextDueDate: new Date('2027-09-03'),
+      vetName: 'Dr. Chen, Portland Animal Hospital',
+    },
+  });
+
+  // Max vet visit
+  await prisma.vetVisit.create({
+    data: {
+      dogId: max.id,
+      date: new Date('2025-11-15'),
+      reason: 'Annual checkup',
+      diagnosis: 'Healthy. Slightly overweight - recommend reducing treats.',
+      treatmentNotes: 'Bloodwork normal. Heartworm negative. Teeth cleaning recommended in 6 months.',
+      cost: 285.00,
+    },
+  });
+
+  // Bear vet visit (rescue intake)
+  await prisma.vetVisit.create({
+    data: {
+      dogId: bear.id,
+      date: new Date('2021-05-20'),
+      reason: 'Rescue intake exam',
+      diagnosis: 'Underweight, mild skin infection. Otherwise healthy.',
+      treatmentNotes: 'Started on antibiotics for skin. High-calorie diet recommended. Neutered.',
+      cost: 450.00,
+    },
+  });
+
+  // Medications
+  await prisma.medication.create({
+    data: {
+      dogId: max.id,
+      name: 'Heartgard Plus',
+      dosage: '1 chewable tablet',
+      frequency: 'Monthly',
+      startDate: new Date('2024-01-01'),
+      notes: 'Heartworm prevention. Give with food.',
+    },
+  });
+
+  await prisma.medication.create({
+    data: {
+      dogId: luna.id,
+      name: 'Fish Oil Supplement',
+      dosage: '1 capsule (1000mg)',
+      frequency: 'Daily',
+      startDate: new Date('2025-03-01'),
+      notes: 'For coat health. Mix with food.',
+    },
+  });
+
+  // Weight logs
+  await prisma.weightLog.createMany({
+    data: [
+      { dogId: max.id, weightKg: 32.5, date: new Date('2025-06-01') },
+      { dogId: max.id, weightKg: 33.2, date: new Date('2025-09-01') },
+      { dogId: max.id, weightKg: 34.0, date: new Date('2025-12-01') },
+      { dogId: max.id, weightKg: 33.5, date: new Date('2026-02-01') },
+      { dogId: luna.id, weightKg: 22.0, date: new Date('2025-09-01') },
+      { dogId: luna.id, weightKg: 22.3, date: new Date('2026-01-01') },
+      { dogId: biscuit.id, weightKg: 5.2, date: new Date('2025-10-01') },
+      { dogId: biscuit.id, weightKg: 8.1, date: new Date('2025-12-01') },
+      { dogId: biscuit.id, weightKg: 12.4, date: new Date('2026-02-01') },
+    ],
+  });
+
+  // Allergies
+  await prisma.allergy.create({
+    data: {
+      dogId: max.id,
+      allergen: 'Chicken',
+      severity: AllergySeverity.MODERATE,
+      notes: 'Causes itchy skin and ear infections. Switched to salmon-based food.',
+    },
+  });
+
+  await prisma.allergy.create({
+    data: {
+      dogId: peanut.id,
+      allergen: 'Grass pollen',
+      severity: AllergySeverity.MILD,
+      notes: 'Seasonal. Paws get itchy in spring. Managed with wipes after walks.',
+    },
+  });
+
+  console.log('Created medical records');
+
+  // ──────────────────────────────────────────────
+  // Medical Share Link
+  // ──────────────────────────────────────────────
+
+  await prisma.medicalShareLink.create({
+    data: {
+      dogId: max.id,
+      expiresAt: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000), // 7 days
+    },
+  });
+
+  console.log('Created medical share link');
+
+  // ──────────────────────────────────────────────
+  // Dog Park + Check-in
+  // ──────────────────────────────────────────────
+
+  const park = await prisma.dogPark.create({
+    data: {
+      name: 'Golden Gate Dog Park',
+      latitude: 37.7694,
+      longitude: -122.4862,
+      address: '1699 Martin Luther King Jr Dr, San Francisco, CA 94122',
+      submittedByUserId: sarah.id,
+      verified: true,
+    },
+  });
+
+  // Max is currently checked in
+  await prisma.parkCheckIn.create({
+    data: {
+      dogId: max.id,
+      parkId: park.id,
+      checkedInAt: new Date(Date.now() - 30 * 60 * 1000), // 30 min ago
+    },
+  });
+
+  console.log('Created dog park with active check-in');
+
+  // ──────────────────────────────────────────────
+  // Lost Dog Alert (resolved)
+  // ──────────────────────────────────────────────
+
+  await prisma.lostDogAlert.create({
+    data: {
+      dogId: daisy.id,
+      lastSeenLatitude: 39.7392,
+      lastSeenLongitude: -104.9903,
+      lastSeenAt: new Date('2025-12-10T14:30:00Z'),
+      description: 'Daisy slipped her leash chasing a squirrel near Washington Park. She is a beagle, tan and white, wearing a red collar. Very friendly but may not come when called if she has a scent.',
+      status: AlertStatus.FOUND,
+      resolvedAt: new Date('2025-12-10T18:45:00Z'),
+    },
+  });
+
+  console.log('Created resolved lost dog alert');
 
   // ──────────────────────────────────────────────
   // Notifications
@@ -446,59 +814,52 @@ async function main() {
     data: [
       {
         type: NotificationType.LIKE,
-        recipientId: alice.id,
-        actorId: bob.id,
+        recipientId: sarah.id,
+        actorId: marcus.id,
         targetId: post1.id,
         targetType: 'post',
       },
       {
         type: NotificationType.COMMENT,
-        recipientId: alice.id,
-        actorId: bob.id,
+        recipientId: sarah.id,
+        actorId: emma.id,
         targetId: post1.id,
         targetType: 'post',
       },
       {
         type: NotificationType.FOLLOW,
-        recipientId: alice.id,
-        actorId: dave.id,
-        targetId: dave.id,
+        recipientId: sarah.id,
+        actorId: lily.id,
+        targetId: lily.id,
         targetType: 'user',
         read: true,
       },
       {
         type: NotificationType.LIKE,
-        recipientId: bob.id,
-        actorId: alice.id,
-        targetId: post2.id,
+        recipientId: jake.id,
+        actorId: sarah.id,
+        targetId: post4.id,
         targetType: 'post',
       },
       {
         type: NotificationType.COMMENT,
-        recipientId: bob.id,
-        actorId: alice.id,
-        targetId: post2.id,
+        recipientId: jake.id,
+        actorId: lily.id,
+        targetId: post4.id,
         targetType: 'post',
       },
       {
         type: NotificationType.LIKE,
-        recipientId: carol.id,
-        actorId: alice.id,
+        recipientId: emma.id,
+        actorId: sarah.id,
         targetId: post3.id,
         targetType: 'post',
       },
       {
         type: NotificationType.COMMENT,
-        recipientId: carol.id,
-        actorId: alice.id,
-        targetId: post3.id,
-        targetType: 'post',
-      },
-      {
-        type: NotificationType.REPOST,
-        recipientId: alice.id,
-        actorId: dave.id,
-        targetId: post5.id,
+        recipientId: marcus.id,
+        actorId: sarah.id,
+        targetId: post2.id,
         targetType: 'post',
       },
     ],
@@ -512,9 +873,9 @@ async function main() {
 
   await prisma.subscription.create({
     data: {
-      userId: alice.id,
-      stripeCustomerId: 'cus_test_alice_001',
-      stripeSubscriptionId: 'sub_test_alice_001',
+      userId: sarah.id,
+      stripeCustomerId: 'cus_test_sarah_001',
+      stripeSubscriptionId: 'sub_test_sarah_001',
       stripePriceId: 'price_premium_monthly',
       status: SubscriptionStatus.ACTIVE,
       currentPeriodStart: new Date(Date.now() - 86400000 * 15),
@@ -524,9 +885,9 @@ async function main() {
 
   await prisma.subscription.create({
     data: {
-      userId: bob.id,
-      stripeCustomerId: 'cus_test_bob_001',
-      stripeSubscriptionId: 'sub_test_bob_001',
+      userId: marcus.id,
+      stripeCustomerId: 'cus_test_marcus_001',
+      stripeSubscriptionId: 'sub_test_marcus_001',
       stripePriceId: 'price_premium_yearly',
       status: SubscriptionStatus.ACTIVE,
       currentPeriodStart: new Date(Date.now() - 86400000 * 30),
@@ -537,36 +898,23 @@ async function main() {
   console.log('Created subscriptions');
 
   // ──────────────────────────────────────────────
-  // Blocks
-  // ──────────────────────────────────────────────
-
-  await prisma.block.create({
-    data: {
-      blockerId: eve.id,
-      blockedId: dave.id,
-    },
-  });
-
-  console.log('Created blocks');
-
-  // ──────────────────────────────────────────────
-  // Reports
+  // Report
   // ──────────────────────────────────────────────
 
   await prisma.report.create({
     data: {
-      reporterId: carol.id,
+      reporterId: lily.id,
       targetType: 'post',
-      targetId: post7.id,
+      targetId: post5.id,
       reason: 'SPAM',
-      description: 'This post seems like self-promotion spam.',
+      description: 'Suspicious AI-generated content without proper disclosure.',
       status: 'PENDING',
     },
   });
 
-  console.log('Created reports');
+  console.log('Created report');
 
-  console.log('Database seeded successfully!');
+  console.log('Database seeded successfully with v2.0 dog-centric data!');
 }
 
 main()
