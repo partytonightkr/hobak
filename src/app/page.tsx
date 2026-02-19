@@ -65,10 +65,10 @@ export default function LandingPage() {
           </div>
 
           {/* ── Floating collage ── */}
-          <div className="pointer-events-none absolute inset-0 bottom-[35%] hidden overflow-hidden lg:block">
+          <div className="pointer-events-none absolute inset-x-[10%] inset-y-0 bottom-[35%] hidden overflow-visible lg:block">
 
             {/* Main phone card — large dog photo */}
-            <div className="absolute right-[6%] top-[4%] h-[320px] w-[210px] rotate-2 rounded-3xl border border-surface-200/60 bg-white shadow-2xl dark:border-surface-700 dark:bg-surface-800">
+            <div className="absolute right-[5%] top-[4%] h-[320px] w-[210px] rotate-2 rounded-3xl border border-surface-200/60 bg-white shadow-2xl dark:border-surface-700 dark:bg-surface-800">
               <div className="mx-auto mt-3 h-1.5 w-16 rounded-full bg-surface-200 dark:bg-surface-600" />
               <div className="relative mx-3 mt-3 h-[200px] overflow-hidden rounded-2xl">
                 {/* eslint-disable-next-line @next/next/no-img-element */}
@@ -98,7 +98,7 @@ export default function LandingPage() {
             </div>
 
             {/* Small reel card — dog running */}
-            <div className="absolute left-[15%] top-[12%] h-[180px] w-[140px] -rotate-6 overflow-hidden rounded-2xl shadow-xl">
+            <div className="absolute left-[5%] top-[12%] h-[180px] w-[140px] -rotate-6 overflow-hidden rounded-2xl shadow-xl">
               {/* eslint-disable-next-line @next/next/no-img-element */}
               <img src="/images/landing/dog2.jpg" alt="Two dogs running on a beach" className="h-full w-full object-cover" />
               {/* Reel icon overlay */}
@@ -108,19 +108,19 @@ export default function LandingPage() {
             </div>
 
             {/* Paw emoji reaction */}
-            <div className="absolute left-[32%] top-[5%] flex h-11 w-11 items-center justify-center rounded-full bg-amber-400 text-xl shadow-lg">
+            <div className="absolute left-[22%] top-[5%] flex h-11 w-11 items-center justify-center rounded-full bg-amber-400 text-xl shadow-lg">
               🐾
             </div>
 
             {/* Heart reaction */}
-            <div className="absolute right-[10%] top-[58%] flex h-11 w-11 items-center justify-center rounded-full bg-rose-400 shadow-lg">
+            <div className="absolute right-[5%] top-[58%] flex h-11 w-11 items-center justify-center rounded-full bg-rose-400 shadow-lg">
               <svg className="h-6 w-6 text-white" fill="currentColor" viewBox="0 0 24 24">
                 <path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z" />
               </svg>
             </div>
 
             {/* Post card with dog photo */}
-            <div className="absolute left-[12%] top-[48%] w-[180px] -rotate-2 rounded-2xl border border-surface-200/60 bg-white p-3 shadow-xl dark:border-surface-700 dark:bg-surface-800">
+            <div className="absolute left-[2%] top-[48%] w-[180px] -rotate-2 rounded-2xl border border-surface-200/60 bg-white p-3 shadow-xl dark:border-surface-700 dark:bg-surface-800">
               <div className="flex items-center gap-2">
                 <div className="h-6 w-6 overflow-hidden rounded-full">
                   {/* eslint-disable-next-line @next/next/no-img-element */}
@@ -140,7 +140,7 @@ export default function LandingPage() {
             </div>
 
             {/* Story circle — dog face */}
-            <div className="absolute right-[32%] top-[55%]">
+            <div className="absolute right-[22%] top-[55%]">
               <div className="rounded-full bg-gradient-to-tr from-primary-400 to-primary-600 p-[3px] shadow-xl">
                 <div className="h-[80px] w-[80px] overflow-hidden rounded-full border-[3px] border-white dark:border-surface-900">
                   {/* eslint-disable-next-line @next/next/no-img-element */}
@@ -150,12 +150,12 @@ export default function LandingPage() {
             </div>
 
             {/* Dog bone floating icon */}
-            <div className="absolute left-[6%] top-[5%] flex h-10 w-10 items-center justify-center rounded-xl bg-amber-100 text-lg shadow-lg dark:bg-amber-900/40">
+            <div className="absolute left-[0%] top-[5%] flex h-10 w-10 items-center justify-center rounded-xl bg-amber-100 text-lg shadow-lg dark:bg-amber-900/40">
               🦴
             </div>
 
             {/* Woof! speech bubble */}
-            <div className="absolute right-[30%] top-[10%] rounded-2xl rounded-bl-sm bg-white px-4 py-2 text-sm font-semibold text-surface-700 shadow-lg dark:bg-surface-800 dark:text-surface-200">
+            <div className="absolute right-[20%] top-[10%] rounded-2xl rounded-bl-sm bg-white px-4 py-2 text-sm font-semibold text-surface-700 shadow-lg dark:bg-surface-800 dark:text-surface-200">
               Woof! 🐕
             </div>
           </div>
