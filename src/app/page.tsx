@@ -6,12 +6,14 @@ import { useRouter } from "next/navigation";
 import { useAuth } from "@/hooks/useAuth";
 import { getLastUser } from "@/store/authStore";
 import { Button } from "@/components/ui/Button";
+import { type Locale, getLocale, setLocale, t } from "@/lib/i18n";
 
 export default function LandingPage() {
   useAuth({ redirectIfAuthenticated: "/feed" });
   const router = useRouter();
   const [lastUser, setLastUser] = useState<{ displayName: string; avatarUrl: string | null } | null>(null);
   const [mounted, setMounted] = useState(false);
+  const [locale, setLocaleState] = useState<Locale>("en");
 
   // Login form state (for new visitors)
   const [email, setEmail] = useState("");
@@ -22,13 +24,19 @@ export default function LandingPage() {
 
   useEffect(() => {
     setLastUser(getLastUser());
+    setLocaleState(getLocale());
     setMounted(true);
   }, []);
+
+  const switchLocale = (newLocale: Locale) => {
+    setLocale(newLocale);
+    setLocaleState(newLocale);
+  };
 
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!email || !password) {
-      setError("Please enter your email and password.");
+      setError(t("enterEmailPassword", locale));
       return;
     }
     setIsLoading(true);
@@ -37,7 +45,7 @@ export default function LandingPage() {
       await login(email, password);
       router.push("/feed");
     } catch (err: unknown) {
-      const msg = err instanceof Error ? err.message : "Login failed. Please try again.";
+      const msg = err instanceof Error ? err.message : t("loginFailed", locale);
       setError(msg);
     } finally {
       setIsLoading(false);
@@ -64,9 +72,8 @@ export default function LandingPage() {
             </div>
           </div>
 
-          {/* ── Floating collage — centered in left panel ── */}
+          {/* ── Floating collage — right side of left panel ── */}
           <div className="pointer-events-none absolute inset-0 bottom-[35%] hidden lg:block">
-            {/* Inner wrapper to center the collage cluster */}
             <div className="relative ml-auto h-full w-full max-w-[540px]">
 
               {/* Main phone card — large dog photo */}
@@ -76,7 +83,6 @@ export default function LandingPage() {
                   {/* eslint-disable-next-line @next/next/no-img-element */}
                   <img src="/images/landing/dog1.jpg" alt="Happy golden retriever" className="h-full w-full object-cover" />
                 </div>
-                {/* Time badge */}
                 <div className="absolute right-4 top-12 flex items-center gap-1 rounded-full bg-primary-600 px-2.5 py-1 text-[11px] font-medium text-white shadow-md">
                   <svg className="h-3 w-3" fill="currentColor" viewBox="0 0 24 24"><path d="M12 2C6.5 2 2 6.5 2 12s4.5 10 10 10 10-4.5 10-10S17.5 2 12 2zm4.2 14.2L11 13V7h1.5v5.2l4.5 2.7-.8 1.3z" /></svg>
                   16:45
@@ -91,7 +97,6 @@ export default function LandingPage() {
                     <div className="mt-1 h-2 w-12 rounded bg-surface-100 dark:bg-surface-700" />
                   </div>
                 </div>
-                {/* Carousel dots */}
                 <div className="mx-auto mt-2 flex items-center justify-center gap-2">
                   <div className="h-2 w-7 rounded-full bg-surface-300" />
                   <div className="h-2 w-2 rounded-full bg-surface-200" />
@@ -103,7 +108,6 @@ export default function LandingPage() {
               <div className="absolute left-[2%] top-[10%] h-[180px] w-[140px] -rotate-6 overflow-hidden rounded-2xl shadow-xl">
                 {/* eslint-disable-next-line @next/next/no-img-element */}
                 <img src="/images/landing/dog2.jpg" alt="Two dogs running on a beach" className="h-full w-full object-cover" />
-                {/* Reel icon overlay */}
                 <div className="absolute left-2 top-2 flex h-7 w-7 items-center justify-center rounded-lg bg-primary-600/90 shadow">
                   <svg className="h-4 w-4 text-white" fill="currentColor" viewBox="0 0 24 24"><path d="M4 6H2v14c0 1.1.9 2 2 2h14v-2H4V6zm16-4H8c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zm-8 12.5v-9l6 4.5-6 4.5z" /></svg>
                 </div>
@@ -158,16 +162,16 @@ export default function LandingPage() {
 
               {/* Woof! speech bubble */}
               <div className="absolute left-[38%] top-[8%] rounded-2xl rounded-bl-sm bg-white px-4 py-2 text-sm font-semibold text-surface-700 shadow-lg dark:bg-surface-800 dark:text-surface-200">
-                Woof! 🐕
+                {locale === "ko" ? "멍멍! 🐕" : "Woof! 🐕"}
               </div>
             </div>
           </div>
 
           {/* Tagline */}
           <h1 className="relative z-10 text-5xl font-extrabold leading-[1.1] tracking-tight text-surface-900 sm:text-6xl lg:text-7xl dark:text-surface-50">
-            Where every<br />
-            pup finds<br />
-            <span className="text-primary-600">their pack</span>.
+            {t("tagline1", locale)}<br />
+            {t("tagline2", locale)}<br />
+            <span className="text-primary-600">{t("tagline3", locale)}</span>.
           </h1>
         </div>
 
@@ -175,7 +179,6 @@ export default function LandingPage() {
         <div className="flex w-full flex-col items-center justify-center border-t border-surface-200 px-8 py-12 lg:w-[460px] lg:min-w-[460px] lg:border-l lg:border-t-0 dark:border-surface-700">
 
           {isReturningUser ? (
-            /* ── Returning user: avatar + pill buttons ── */
             <>
               <div className="mb-auto self-end">
                 <button className="rounded-full p-2 text-surface-400 hover:bg-surface-100 dark:hover:bg-surface-800">
@@ -186,7 +189,6 @@ export default function LandingPage() {
                 </button>
               </div>
 
-              {/* User avatar */}
               <div className="mb-4 h-[140px] w-[140px] overflow-hidden rounded-full bg-gradient-to-br from-primary-100 to-primary-200 shadow dark:from-primary-900/40 dark:to-primary-800/40">
                 {lastUser.avatarUrl ? (
                   /* eslint-disable-next-line @next/next/no-img-element */
@@ -204,26 +206,22 @@ export default function LandingPage() {
               <div className="w-full max-w-[320px] space-y-3">
                 <Link href="/login" className="block">
                   <button className="w-full rounded-full bg-primary-600 px-6 py-3 text-[15px] font-semibold text-white transition-colors hover:bg-primary-700">
-                    Log In
+                    {t("logIn", locale)}
                   </button>
                 </Link>
-
                 <Link href="/login" className="block">
                   <button className="w-full rounded-full border border-surface-300 bg-white px-6 py-3 text-[15px] font-semibold text-surface-900 transition-colors hover:bg-surface-50 dark:border-surface-600 dark:bg-surface-800 dark:text-surface-100 dark:hover:bg-surface-700">
-                    Use another profile
+                    {t("useAnotherProfile", locale)}
                   </button>
                 </Link>
-
                 <div className="py-2" />
-
                 <Link href="/register" className="block">
                   <button className="w-full rounded-full border border-primary-300 bg-white px-6 py-3 text-[15px] font-semibold text-primary-600 transition-colors hover:bg-primary-50 dark:border-primary-700 dark:bg-surface-800 dark:text-primary-400 dark:hover:bg-primary-900/20">
-                    Create new account
+                    {t("createNewAccount", locale)}
                   </button>
                 </Link>
               </div>
 
-              {/* Bottom branding */}
               <div className="mt-auto flex items-center gap-1.5 pt-8 text-surface-400">
                 <div className="relative h-5 w-5">
                   <div className="absolute bottom-0 left-1/2 h-[13px] w-[16px] -translate-x-1/2 rounded-[8px_8px_7px_7px] bg-surface-400" />
@@ -236,11 +234,10 @@ export default function LandingPage() {
               </div>
             </>
           ) : (
-            /* ── New visitor: login form ── */
             <>
               <div className="w-full max-w-[380px]">
                 <h2 className="mb-8 text-2xl font-bold text-surface-900 dark:text-surface-50">
-                  Log into Hobak
+                  {t("logIntoHobak", locale)}
                 </h2>
 
                 <form onSubmit={handleLogin} className="space-y-3">
@@ -252,7 +249,7 @@ export default function LandingPage() {
 
                   <input
                     type="email"
-                    placeholder="Email address"
+                    placeholder={t("emailPlaceholder", locale)}
                     value={email}
                     onChange={(e) => setEmail(e.target.value)}
                     className="block w-full rounded-xl border border-surface-300 bg-white px-4 py-[14px] text-[15px] text-surface-900 placeholder:text-surface-400 focus:border-primary-500 focus:outline-none focus:ring-1 focus:ring-primary-500 dark:border-surface-600 dark:bg-surface-800 dark:text-surface-100"
@@ -260,7 +257,7 @@ export default function LandingPage() {
 
                   <input
                     type="password"
-                    placeholder="Password"
+                    placeholder={t("passwordPlaceholder", locale)}
                     value={password}
                     onChange={(e) => setPassword(e.target.value)}
                     className="block w-full rounded-xl border border-surface-300 bg-white px-4 py-[14px] text-[15px] text-surface-900 placeholder:text-surface-400 focus:border-primary-500 focus:outline-none focus:ring-1 focus:ring-primary-500 dark:border-surface-600 dark:bg-surface-800 dark:text-surface-100"
@@ -271,13 +268,13 @@ export default function LandingPage() {
                     className="!w-full !rounded-full !py-3.5 !text-[15px] !font-semibold"
                     isLoading={isLoading}
                   >
-                    Log In
+                    {t("logIn", locale)}
                   </Button>
                 </form>
 
                 <div className="mt-5 text-center">
                   <Link href="/forgot-password" className="text-sm text-surface-900 hover:underline dark:text-surface-100">
-                    Forgot password?
+                    {t("forgotPassword", locale)}
                   </Link>
                 </div>
 
@@ -286,13 +283,12 @@ export default function LandingPage() {
                 <div className="text-center">
                   <Link href="/register">
                     <button className="w-full rounded-full border border-primary-300 bg-white px-6 py-3.5 text-[15px] font-semibold text-primary-600 transition-colors hover:bg-primary-50 dark:border-primary-700 dark:bg-surface-800 dark:text-primary-400 dark:hover:bg-primary-900/20">
-                      Create new account
+                      {t("createNewAccount", locale)}
                     </button>
                   </Link>
                 </div>
               </div>
 
-              {/* Bottom branding */}
               <div className="mt-auto flex items-center gap-1.5 pt-10 text-surface-400">
                 <div className="relative h-5 w-5">
                   <div className="absolute bottom-0 left-1/2 h-[13px] w-[16px] -translate-x-1/2 rounded-[8px_8px_7px_7px] bg-surface-400" />
@@ -308,16 +304,28 @@ export default function LandingPage() {
         </div>
       </div>
 
-      {/* Footer */}
+      {/* Footer with language switcher */}
       <footer className="border-t border-surface-200 bg-white py-4 dark:border-surface-700 dark:bg-surface-900">
         <div className="mx-auto flex max-w-5xl flex-wrap items-center justify-center gap-x-5 gap-y-1 px-4 text-xs text-surface-500">
-          <span className="font-medium text-surface-600 dark:text-surface-400">English (US)</span>
-          <Link href="#" className="hover:underline">About</Link>
-          <Link href="#" className="hover:underline">Help</Link>
-          <Link href="#" className="hover:underline">Terms</Link>
-          <Link href="#" className="hover:underline">Privacy</Link>
-          <Link href="#" className="hover:underline">Cookies</Link>
-          <Link href="#" className="hover:underline">Developers</Link>
+          <button
+            onClick={() => switchLocale("en")}
+            className={`font-medium hover:underline ${locale === "en" ? "text-primary-600 dark:text-primary-400" : "text-surface-600 dark:text-surface-400"}`}
+          >
+            English (US)
+          </button>
+          <button
+            onClick={() => switchLocale("ko")}
+            className={`font-medium hover:underline ${locale === "ko" ? "text-primary-600 dark:text-primary-400" : "text-surface-600 dark:text-surface-400"}`}
+          >
+            한국어
+          </button>
+          <span className="text-surface-300 dark:text-surface-600">|</span>
+          <Link href="#" className="hover:underline">{t("about", locale)}</Link>
+          <Link href="#" className="hover:underline">{t("help", locale)}</Link>
+          <Link href="#" className="hover:underline">{t("terms", locale)}</Link>
+          <Link href="#" className="hover:underline">{t("privacy", locale)}</Link>
+          <Link href="#" className="hover:underline">{t("cookies", locale)}</Link>
+          <Link href="#" className="hover:underline">{t("developers", locale)}</Link>
         </div>
       </footer>
     </div>

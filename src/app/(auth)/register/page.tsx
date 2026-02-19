@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useForm } from "react-hook-form";
@@ -8,6 +8,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
 import { Button } from "@/components/ui/Button";
 import { useAuth } from "@/hooks/useAuth";
+import { type Locale, getLocale, t } from "@/lib/i18n";
 
 const registerSchema = z.object({
   displayName: z.string().min(1, "Display name is required").max(50, "Max 50 characters"),
@@ -34,6 +35,11 @@ export default function RegisterPage() {
   const { register: registerUser } = useAuth({ redirectIfAuthenticated: "/feed" });
   const [error, setError] = useState("");
   const [isLoading, setIsLoading] = useState(false);
+  const [locale, setLocale] = useState<Locale>("en");
+
+  useEffect(() => {
+    setLocale(getLocale());
+  }, []);
 
   const { register, handleSubmit, formState: { errors } } = useForm<RegisterForm>({
     resolver: zodResolver(registerSchema),
@@ -51,7 +57,7 @@ export default function RegisterPage() {
       });
       router.push("/onboarding");
     } catch (err: unknown) {
-      const msg = err instanceof Error ? err.message : "Registration failed. Please try again.";
+      const msg = err instanceof Error ? err.message : t("registrationFailed", locale);
       setError(msg);
     } finally {
       setIsLoading(false);
@@ -65,8 +71,8 @@ export default function RegisterPage() {
         <div className="rounded-t-lg border-b border-surface-200 bg-white px-5 pt-5 pb-3 shadow-[0_2px_4px_rgba(0,0,0,0.1),0_8px_16px_rgba(0,0,0,0.1)] dark:border-surface-700 dark:bg-surface-900 dark:shadow-[0_2px_4px_rgba(0,0,0,0.3),0_8px_16px_rgba(0,0,0,0.3)]">
           <div className="flex items-center justify-between">
             <div>
-              <h1 className="text-[28px] font-semibold leading-tight text-surface-900 dark:text-surface-50">Sign Up</h1>
-              <p className="mt-1 text-sm text-surface-500">It&apos;s quick and easy.</p>
+              <h1 className="text-[28px] font-semibold leading-tight text-surface-900 dark:text-surface-50">{t("signUp", locale)}</h1>
+              <p className="mt-1 text-sm text-surface-500">{t("signUpSubtitle", locale)}</p>
             </div>
             <Link href="/" className="rounded-full p-2 text-surface-400 hover:bg-surface-100 dark:hover:bg-surface-800">
               <svg className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
@@ -85,12 +91,11 @@ export default function RegisterPage() {
               </div>
             )}
 
-            {/* Name row — side by side like Facebook */}
             <div className="grid grid-cols-2 gap-3">
               <div>
                 <input
                   type="text"
-                  placeholder="Display name"
+                  placeholder={t("displayNamePlaceholder", locale)}
                   className="block w-full rounded-md border border-surface-300 bg-surface-50 px-3 py-[10px] text-[15px] text-surface-900 placeholder:text-surface-400 focus:border-primary-500 focus:bg-white focus:outline-none focus:ring-1 focus:ring-primary-500 dark:border-surface-600 dark:bg-surface-800 dark:text-surface-100 dark:focus:bg-surface-800"
                   {...register("displayName")}
                 />
@@ -99,7 +104,7 @@ export default function RegisterPage() {
               <div>
                 <input
                   type="text"
-                  placeholder="Username"
+                  placeholder={t("usernamePlaceholder", locale)}
                   className="block w-full rounded-md border border-surface-300 bg-surface-50 px-3 py-[10px] text-[15px] text-surface-900 placeholder:text-surface-400 focus:border-primary-500 focus:bg-white focus:outline-none focus:ring-1 focus:ring-primary-500 dark:border-surface-600 dark:bg-surface-800 dark:text-surface-100 dark:focus:bg-surface-800"
                   {...register("username")}
                 />
@@ -110,7 +115,7 @@ export default function RegisterPage() {
             <div>
               <input
                 type="email"
-                placeholder="Email address"
+                placeholder={t("emailPlaceholder", locale)}
                 className="block w-full rounded-md border border-surface-300 bg-surface-50 px-3 py-[10px] text-[15px] text-surface-900 placeholder:text-surface-400 focus:border-primary-500 focus:bg-white focus:outline-none focus:ring-1 focus:ring-primary-500 dark:border-surface-600 dark:bg-surface-800 dark:text-surface-100 dark:focus:bg-surface-800"
                 {...register("email")}
               />
@@ -120,7 +125,7 @@ export default function RegisterPage() {
             <div>
               <input
                 type="password"
-                placeholder="New password"
+                placeholder={t("newPasswordPlaceholder", locale)}
                 className="block w-full rounded-md border border-surface-300 bg-surface-50 px-3 py-[10px] text-[15px] text-surface-900 placeholder:text-surface-400 focus:border-primary-500 focus:bg-white focus:outline-none focus:ring-1 focus:ring-primary-500 dark:border-surface-600 dark:bg-surface-800 dark:text-surface-100 dark:focus:bg-surface-800"
                 {...register("password")}
               />
@@ -130,7 +135,7 @@ export default function RegisterPage() {
             <div>
               <input
                 type="password"
-                placeholder="Confirm password"
+                placeholder={t("confirmPasswordPlaceholder", locale)}
                 className="block w-full rounded-md border border-surface-300 bg-surface-50 px-3 py-[10px] text-[15px] text-surface-900 placeholder:text-surface-400 focus:border-primary-500 focus:bg-white focus:outline-none focus:ring-1 focus:ring-primary-500 dark:border-surface-600 dark:bg-surface-800 dark:text-surface-100 dark:focus:bg-surface-800"
                 {...register("confirmPassword")}
               />
@@ -138,10 +143,12 @@ export default function RegisterPage() {
             </div>
 
             <p className="!mt-4 text-[11px] leading-relaxed text-surface-400">
-              By clicking Sign Up, you agree to our{" "}
-              <Link href="#" className="text-primary-600 hover:underline">Terms</Link>,{" "}
-              <Link href="#" className="text-primary-600 hover:underline">Privacy Policy</Link> and{" "}
-              <Link href="#" className="text-primary-600 hover:underline">Cookies Policy</Link>.
+              {t("termsText", locale)}{" "}
+              <Link href="#" className="text-primary-600 hover:underline">{t("terms", locale)}</Link>,{" "}
+              <Link href="#" className="text-primary-600 hover:underline">{t("privacyPolicy", locale)}</Link>{" "}
+              {locale === "ko" ? "및" : "and"}{" "}
+              <Link href="#" className="text-primary-600 hover:underline">{t("cookiesPolicy", locale)}</Link>
+              {locale === "ko" ? "에 동의하게 됩니다." : "."}
             </p>
 
             <div className="!mt-4 flex justify-center">
@@ -150,15 +157,15 @@ export default function RegisterPage() {
                 className="!rounded-md !bg-green-500 !px-16 !py-2.5 !text-lg !font-semibold !text-white hover:!bg-green-600 focus:!ring-green-500"
                 isLoading={isLoading}
               >
-                Sign Up
+                {t("signUp", locale)}
               </Button>
             </div>
           </form>
 
           <p className="mt-5 text-center text-sm text-surface-500">
-            Already have an account?{" "}
+            {t("alreadyHaveAccount", locale)}{" "}
             <Link href="/login" className="font-medium text-primary-600 hover:underline">
-              Log in
+              {t("logIn", locale)}
             </Link>
           </p>
         </div>

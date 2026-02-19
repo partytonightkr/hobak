@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useForm } from "react-hook-form";
@@ -8,6 +8,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
 import { Button } from "@/components/ui/Button";
 import { useAuth } from "@/hooks/useAuth";
+import { type Locale, getLocale, t } from "@/lib/i18n";
 
 const loginSchema = z.object({
   email: z.string().email("Invalid email address"),
@@ -21,6 +22,11 @@ export default function LoginPage() {
   const { login } = useAuth({ redirectIfAuthenticated: "/feed" });
   const [error, setError] = useState("");
   const [isLoading, setIsLoading] = useState(false);
+  const [locale, setLocale] = useState<Locale>("en");
+
+  useEffect(() => {
+    setLocale(getLocale());
+  }, []);
 
   const { register, handleSubmit, formState: { errors } } = useForm<LoginForm>({
     resolver: zodResolver(loginSchema),
@@ -33,7 +39,7 @@ export default function LoginPage() {
       await login(data.email, data.password);
       router.push("/feed");
     } catch (err: unknown) {
-      const msg = err instanceof Error ? err.message : "Login failed. Please try again.";
+      const msg = err instanceof Error ? err.message : t("loginFailed", locale);
       setError(msg);
     } finally {
       setIsLoading(false);
@@ -67,7 +73,7 @@ export default function LoginPage() {
             <div>
               <input
                 type="email"
-                placeholder="Email address"
+                placeholder={t("emailPlaceholder", locale)}
                 className="block w-full rounded-md border border-surface-300 bg-white px-4 py-[14px] text-[15px] text-surface-900 placeholder:text-surface-400 focus:border-primary-500 focus:outline-none focus:ring-1 focus:ring-primary-500 dark:border-surface-600 dark:bg-surface-800 dark:text-surface-100"
                 {...register("email")}
               />
@@ -77,7 +83,7 @@ export default function LoginPage() {
             <div>
               <input
                 type="password"
-                placeholder="Password"
+                placeholder={t("passwordPlaceholder", locale)}
                 className="block w-full rounded-md border border-surface-300 bg-white px-4 py-[14px] text-[15px] text-surface-900 placeholder:text-surface-400 focus:border-primary-500 focus:outline-none focus:ring-1 focus:ring-primary-500 dark:border-surface-600 dark:bg-surface-800 dark:text-surface-100"
                 {...register("password")}
               />
@@ -85,12 +91,12 @@ export default function LoginPage() {
             </div>
 
             <Button type="submit" className="!w-full !rounded-md !py-3 !text-lg !font-semibold" isLoading={isLoading}>
-              Log In
+              {t("logIn", locale)}
             </Button>
 
             <div className="text-center">
               <Link href="/forgot-password" className="text-sm text-primary-600 hover:underline dark:text-primary-400">
-                Forgot password?
+                {t("forgotPassword", locale)}
               </Link>
             </div>
 
@@ -102,7 +108,7 @@ export default function LoginPage() {
                   type="button"
                   className="!rounded-md !bg-green-500 !px-6 !py-3 !text-[15px] !font-semibold !text-white hover:!bg-green-600 focus:!ring-green-500"
                 >
-                  Create new account
+                  {t("createNewAccount", locale)}
                 </Button>
               </Link>
             </div>
@@ -110,7 +116,7 @@ export default function LoginPage() {
         </div>
 
         <p className="mt-5 text-center text-sm text-surface-500">
-          <Link href="/register" className="font-semibold hover:underline">Create a Page</Link> for your dog, vet clinic, or dog park.
+          <Link href="/register" className="font-semibold hover:underline">{t("createPage", locale)}</Link>
         </p>
       </div>
     </div>
