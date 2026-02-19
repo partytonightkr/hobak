@@ -7,6 +7,7 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
 import { Button } from "@/components/ui/Button";
+import { HobakLogo } from "@/components/ui/HobakLogo";
 import { useAuth } from "@/hooks/useAuth";
 import { type Locale, getLocale, t } from "@/lib/i18n";
 
@@ -51,13 +52,7 @@ export default function LoginPage() {
       <div className="w-full max-w-[400px]">
         <div className="mb-6 text-center">
           <Link href="/" className="inline-flex items-center gap-2">
-            <div className="relative h-12 w-12">
-              <div className="absolute bottom-0 left-1/2 h-[32px] w-[38px] -translate-x-1/2 rounded-[20px_20px_18px_18px] bg-primary-600" />
-              <div className="absolute left-[5px] top-0 h-[12px] w-[12px] rounded-full bg-primary-500" />
-              <div className="absolute right-[5px] top-0 h-[12px] w-[12px] rounded-full bg-primary-500" />
-              <div className="absolute left-0 top-[7px] h-[9px] w-[9px] rounded-full bg-primary-400" />
-              <div className="absolute right-0 top-[7px] h-[9px] w-[9px] rounded-full bg-primary-400" />
-            </div>
+            <HobakLogo className="h-12 w-12" color="#7c3aed" />
             <span className="text-3xl font-extrabold text-primary-600">Hobak</span>
           </Link>
         </div>

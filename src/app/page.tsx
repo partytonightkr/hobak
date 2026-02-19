@@ -6,6 +6,7 @@ import { useRouter } from "next/navigation";
 import { useAuth } from "@/hooks/useAuth";
 import { getLastUser } from "@/store/authStore";
 import { Button } from "@/components/ui/Button";
+import { HobakLogo } from "@/components/ui/HobakLogo";
 import { type Locale, getLocale, setLocale, t } from "@/lib/i18n";
 
 export default function LandingPage() {
@@ -61,15 +62,9 @@ export default function LandingPage() {
 
         {/* ─── Left: Photo collage + tagline ─── */}
         <div className="relative flex flex-1 flex-col justify-end overflow-hidden bg-surface-50 px-8 pb-14 pt-8 lg:px-16 dark:bg-surface-900">
-          {/* Paw logo top-left */}
+          {/* Logo top-left */}
           <div className="mb-auto">
-            <div className="relative h-12 w-12">
-              <div className="absolute bottom-0 left-1/2 h-[32px] w-[38px] -translate-x-1/2 rounded-[20px_20px_18px_18px] bg-primary-600" />
-              <div className="absolute left-[5px] top-0 h-[12px] w-[12px] rounded-full bg-primary-500" />
-              <div className="absolute right-[5px] top-0 h-[12px] w-[12px] rounded-full bg-primary-500" />
-              <div className="absolute left-0 top-[7px] h-[9px] w-[9px] rounded-full bg-primary-400" />
-              <div className="absolute right-0 top-[7px] h-[9px] w-[9px] rounded-full bg-primary-400" />
-            </div>
+            <HobakLogo className="h-12 w-12" color="#7c3aed" />
           </div>
 
           {/* ── Floating collage — right side, vertically centered, overlapping ── */}
@@ -218,13 +213,7 @@ export default function LandingPage() {
               </div>
 
               <div className="mt-auto flex items-center gap-1.5 pt-8 text-surface-400">
-                <div className="relative h-5 w-5">
-                  <div className="absolute bottom-0 left-1/2 h-[13px] w-[16px] -translate-x-1/2 rounded-[8px_8px_7px_7px] bg-surface-400" />
-                  <div className="absolute left-[2px] top-0 h-[5px] w-[5px] rounded-full bg-surface-400" />
-                  <div className="absolute right-[2px] top-0 h-[5px] w-[5px] rounded-full bg-surface-400" />
-                  <div className="absolute left-0 top-[3px] h-[4px] w-[4px] rounded-full bg-surface-400" />
-                  <div className="absolute right-0 top-[3px] h-[4px] w-[4px] rounded-full bg-surface-400" />
-                </div>
+                <HobakLogo className="h-5 w-5" color="currentColor" />
                 <span className="text-sm font-semibold tracking-wide">Hobak</span>
               </div>
             </>
@@ -285,13 +274,7 @@ export default function LandingPage() {
               </div>
 
               <div className="mt-auto flex items-center gap-1.5 pt-10 text-surface-400">
-                <div className="relative h-5 w-5">
-                  <div className="absolute bottom-0 left-1/2 h-[13px] w-[16px] -translate-x-1/2 rounded-[8px_8px_7px_7px] bg-surface-400" />
-                  <div className="absolute left-[2px] top-0 h-[5px] w-[5px] rounded-full bg-surface-400" />
-                  <div className="absolute right-[2px] top-0 h-[5px] w-[5px] rounded-full bg-surface-400" />
-                  <div className="absolute left-0 top-[3px] h-[4px] w-[4px] rounded-full bg-surface-400" />
-                  <div className="absolute right-0 top-[3px] h-[4px] w-[4px] rounded-full bg-surface-400" />
-                </div>
+                <HobakLogo className="h-5 w-5" color="currentColor" />
                 <span className="text-sm font-semibold tracking-wide">Hobak</span>
               </div>
             </>
