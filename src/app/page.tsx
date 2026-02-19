@@ -73,7 +73,7 @@ export default function LandingPage() {
           </div>
 
           {/* ── Floating collage — right side, vertically centered, overlapping ── */}
-          <div className="pointer-events-none absolute inset-0 bottom-[30%] hidden lg:flex items-center justify-end pr-8">
+          <div className="pointer-events-none absolute inset-0 bottom-[20%] hidden lg:flex items-center justify-end pr-8 pt-[8%]">
             {/* Collage cluster — fixed size, elements overlap tightly */}
             <div className="relative h-[480px] w-[420px]">
 
