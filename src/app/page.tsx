@@ -10,9 +10,9 @@ export default function LandingPage() {
         <div className="mx-auto flex h-16 max-w-6xl items-center justify-between px-4">
           <div className="flex items-center gap-2">
             <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-primary-600">
-              <span className="text-lg font-bold text-white">C</span>
+              <span className="text-lg font-bold text-white">H</span>
             </div>
-            <span className="text-xl font-bold text-surface-900 dark:text-surface-50">Commune</span>
+            <span className="text-xl font-bold text-surface-900 dark:text-surface-50">Hobak</span>
           </div>
           <div className="flex items-center gap-3">
             <Link href="/login">
@@ -28,14 +28,14 @@ export default function LandingPage() {
       <main>
         <section className="mx-auto max-w-6xl px-4 py-24 text-center sm:py-32">
           <h1 className="text-4xl font-bold tracking-tight text-surface-900 sm:text-6xl dark:text-surface-50">
-            Where ideas thrive and{" "}
+            Where every pup finds their{" "}
             <span className="bg-gradient-to-r from-primary-500 to-accent-500 bg-clip-text text-transparent">
-              communities grow
+              pack
             </span>
           </h1>
           <p className="mx-auto mt-6 max-w-2xl text-lg text-surface-600 dark:text-surface-400">
-            Commune is a social platform built for meaningful connections. Share your thoughts, discover
-            like-minded people, and build communities around what you care about.
+            Hobak is the social platform built for dogs and their humans. Share your pup&apos;s adventures,
+            connect with fellow dog lovers, and build your pack.
           </p>
           <div className="mt-10 flex items-center justify-center gap-4">
             <Link href="/register">
@@ -50,13 +50,13 @@ export default function LandingPage() {
         <section className="border-t border-surface-200 bg-white py-20 dark:border-surface-700 dark:bg-surface-900">
           <div className="mx-auto max-w-6xl px-4">
             <h2 className="text-center text-3xl font-bold text-surface-900 dark:text-surface-50">
-              Everything you need to connect
+              Everything your dog needs
             </h2>
             <div className="mt-12 grid gap-8 sm:grid-cols-2 lg:grid-cols-3">
               {[
                 {
-                  title: "Share your story",
-                  description: "Create posts with text, images, and links. Express yourself with up to 2000 characters.",
+                  title: "Share adventures",
+                  description: "Post your dog's best moments with photos and stories. Let your pup's personality shine.",
                   icon: (
                     <svg className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
@@ -64,8 +64,8 @@ export default function LandingPage() {
                   ),
                 },
                 {
-                  title: "Build your circle",
-                  description: "Follow people you care about. Discover new voices through recommendations and trending topics.",
+                  title: "Build your pack",
+                  description: "Follow other dogs, discover new friends, and connect with fellow dog lovers nearby.",
                   icon: (
                     <svg className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" />
@@ -82,8 +82,8 @@ export default function LandingPage() {
                   ),
                 },
                 {
-                  title: "Discover content",
-                  description: "Search for people on the platform. Find and follow like-minded individuals.",
+                  title: "Discover dogs",
+                  description: "Find dogs by breed, location, or personality. Your pup's next best friend is a search away.",
                   icon: (
                     <svg className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
@@ -114,9 +114,9 @@ export default function LandingPage() {
 
         <section className="py-20">
           <div className="mx-auto max-w-3xl px-4 text-center">
-            <h2 className="text-3xl font-bold text-surface-900 dark:text-surface-50">Ready to join the conversation?</h2>
+            <h2 className="text-3xl font-bold text-surface-900 dark:text-surface-50">Ready to join the pack?</h2>
             <p className="mt-4 text-lg text-surface-600 dark:text-surface-400">
-              Start connecting with people and communities that matter to you.
+              Create a profile for your pup and start connecting with dogs and their humans.
             </p>
             <Link href="/register" className="mt-8 inline-block">
               <Button size="lg">Create your account</Button>
@@ -127,7 +127,7 @@ export default function LandingPage() {
 
       <footer className="border-t border-surface-200 bg-white py-8 dark:border-surface-700 dark:bg-surface-900">
         <div className="mx-auto max-w-6xl px-4 text-center text-sm text-surface-500">
-          <p>Commune - Connect, Share, Build Community</p>
+          <p>Hobak - Your Best Friend</p>
         </div>
       </footer>
     </div>

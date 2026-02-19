@@ -609,7 +609,7 @@ export default function OnboardingPage() {
             Create your dog&apos;s profile
           </h1>
           <p className="mt-1 text-sm text-surface-500">
-            Tell us about your furry friend to get started on Commune.
+            Tell us about your furry friend to get started on Hobak.
           </p>
         </div>
 

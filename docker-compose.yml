@@ -1,5 +1,5 @@
 # =============================================================================
-# Commune Social App - Docker Compose (Production)
+# Hobak Social App - Docker Compose (Production)
 # =============================================================================
 # Usage: docker compose up -d
 # =============================================================================
@@ -10,15 +10,15 @@ services:
     image: postgres:16-alpine
     restart: unless-stopped
     environment:
-      POSTGRES_USER: commune
-      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-commune_dev}
-      POSTGRES_DB: commune
+      POSTGRES_USER: hobak
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-hobak_dev}
+      POSTGRES_DB: hobak
     volumes:
       - postgres_data:/var/lib/postgresql/data
     ports:
       - "${POSTGRES_PORT:-5432}:5432"
     healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U commune"]
+      test: ["CMD-SHELL", "pg_isready -U hobak"]
       interval: 10s
       timeout: 5s
       retries: 5
@@ -45,7 +45,7 @@ services:
       dockerfile: Dockerfile
       args:
         NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY: ${NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY:-}
-        NEXT_PUBLIC_APP_NAME: ${NEXT_PUBLIC_APP_NAME:-Commune}
+        NEXT_PUBLIC_APP_NAME: ${NEXT_PUBLIC_APP_NAME:-Hobak}
         NEXT_PUBLIC_APP_URL: ${NEXT_PUBLIC_APP_URL:-http://localhost:3000}
     restart: unless-stopped
     depends_on:
@@ -55,7 +55,7 @@ services:
         condition: service_healthy
     environment:
       NODE_ENV: production
-      DATABASE_URL: postgresql://commune:${POSTGRES_PASSWORD:-commune_dev}@postgres:5432/commune?schema=public
+      DATABASE_URL: postgresql://hobak:${POSTGRES_PASSWORD:-hobak_dev}@postgres:5432/hobak?schema=public
       REDIS_URL: redis://redis:6379
       JWT_SECRET: ${JWT_SECRET}
       JWT_REFRESH_SECRET: ${JWT_REFRESH_SECRET}

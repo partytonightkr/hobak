@@ -8,7 +8,7 @@ import {
   AllergySeverity,
   AlertStatus,
 } from '@prisma/client';
-import { hash } from 'bcryptjs';
+import bcrypt from 'bcrypt';
 
 const prisma = new PrismaClient();
 
@@ -47,7 +47,7 @@ async function main() {
     prisma.user.deleteMany(),
   ]);
 
-  const passwordHash = await hash('password123', 12);
+  const passwordHash = await bcrypt.hash('password123', 12);
 
   // ──────────────────────────────────────────────
   // Owners (5 dog owners)
@@ -367,7 +367,7 @@ async function main() {
       { name: 'dogpark', postsCount: 2 },
       { name: 'puppy', postsCount: 2 },
       { name: 'rescuedog', postsCount: 2 },
-      { name: 'dogsofcommune', postsCount: 4 },
+      { name: 'dogsofhobak', postsCount: 4 },
       { name: 'dogtraining', postsCount: 1 },
       { name: 'zoomies', postsCount: 1 },
       { name: 'pittie', postsCount: 1 },
@@ -384,25 +384,25 @@ async function main() {
 
   const post1 = await prisma.post.create({
     data: {
-      content: 'Went to the beach today and discovered that waves are basically infinite fetch! The ocean throws the ball, I chase it, the ocean takes it back. We did this for THREE HOURS. Best day ever. #goldenretriever #dogsofcommune',
+      content: 'Went to the beach today and discovered that waves are basically infinite fetch! The ocean throws the ball, I chase it, the ocean takes it back. We did this for THREE HOURS. Best day ever. #goldenretriever #dogsofhobak',
       authorId: sarah.id,
       dogId: max.id,
       likesCount: 5,
       commentsCount: 3,
-      postHashtags: { create: [{ hashtagId: ht['goldenretriever'] }, { hashtagId: ht['dogsofcommune'] }] },
+      postHashtags: { create: [{ hashtagId: ht['goldenretriever'] }, { hashtagId: ht['dogsofhobak'] }] },
     },
   });
 
   const post2 = await prisma.post.create({
     data: {
-      content: 'My human thinks I was howling at 3am because of a siren. I was actually composing a symphony. You would not understand art. #husky #dogsofcommune',
+      content: 'My human thinks I was howling at 3am because of a siren. I was actually composing a symphony. You would not understand art. #husky #dogsofhobak',
       authorId: marcus.id,
       dogId: luna.id,
       aiAssisted: true,
       aiModelUsed: 'claude-sonnet-4-6',
       likesCount: 4,
       commentsCount: 2,
-      postHashtags: { create: [{ hashtagId: ht['husky'] }, { hashtagId: ht['dogsofcommune'] }] },
+      postHashtags: { create: [{ hashtagId: ht['husky'] }, { hashtagId: ht['dogsofhobak'] }] },
     },
   });
 
@@ -419,13 +419,13 @@ async function main() {
 
   const post4 = await prisma.post.create({
     data: {
-      content: 'Two years ago I was in a shelter. Today I have a yard, two siblings, and a human who gives me the good treats. Life gets better. #rescuedog #dogsofcommune',
+      content: 'Two years ago I was in a shelter. Today I have a yard, two siblings, and a human who gives me the good treats. Life gets better. #rescuedog #dogsofhobak',
       authorId: jake.id,
       dogId: bear.id,
       mediaUrls: ['/uploads/media/bear-then-now.jpg'],
       likesCount: 5,
       commentsCount: 3,
-      postHashtags: { create: [{ hashtagId: ht['rescuedog'] }, { hashtagId: ht['dogsofcommune'] }] },
+      postHashtags: { create: [{ hashtagId: ht['rescuedog'] }, { hashtagId: ht['dogsofhobak'] }] },
     },
   });
 

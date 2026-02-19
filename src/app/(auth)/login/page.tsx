@@ -47,11 +47,11 @@ export default function LoginPage() {
         <div className="text-center">
           <Link href="/" className="inline-flex items-center gap-2">
             <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-primary-600">
-              <span className="text-xl font-bold text-white">C</span>
+              <span className="text-xl font-bold text-white">H</span>
             </div>
           </Link>
           <h1 className="mt-6 text-2xl font-bold text-surface-900 dark:text-surface-50">Welcome back</h1>
-          <p className="mt-2 text-sm text-surface-500">Sign in to your Commune account</p>
+          <p className="mt-2 text-sm text-surface-500">Sign in to your Hobak account</p>
         </div>
 
         <form onSubmit={handleSubmit(onSubmit)} className="mt-8 space-y-4">

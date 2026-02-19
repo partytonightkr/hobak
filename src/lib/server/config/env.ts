@@ -4,7 +4,7 @@ const isProduction = process.env.NODE_ENV === 'production';
 
 const envSchema = z.object({
   NODE_ENV: z.enum(['development', 'production', 'test']).default('development'),
-  DATABASE_URL: z.string().default('postgresql://postgres:postgres@localhost:5432/commune'),
+  DATABASE_URL: z.string().default('postgresql://postgres:postgres@localhost:5432/hobak'),
   JWT_SECRET: isProduction
     ? z.string().min(32, 'JWT_SECRET must be at least 32 characters in production')
     : z.string().default('DEV-ONLY-access-secret-DO-NOT-USE-IN-PROD'),

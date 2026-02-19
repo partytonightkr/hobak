@@ -1,5 +1,5 @@
 # =============================================================================
-# Commune Social App - Docker Compose Development Overrides
+# Hobak Social App - Docker Compose Development Overrides
 # =============================================================================
 # Usage: docker compose -f docker-compose.yml -f docker-compose.dev.yml up
 # =============================================================================
@@ -9,7 +9,7 @@ services:
     ports:
       - "5432:5432"
     environment:
-      POSTGRES_PASSWORD: commune_dev
+      POSTGRES_PASSWORD: hobak_dev
 
   redis:
     ports:
@@ -23,11 +23,11 @@ services:
     command: npm run dev
     environment:
       NODE_ENV: development
-      DATABASE_URL: postgresql://commune:commune_dev@postgres:5432/commune?schema=public
+      DATABASE_URL: postgresql://hobak:hobak_dev@postgres:5432/hobak?schema=public
       REDIS_URL: redis://redis:6379
       JWT_SECRET: dev-secret-do-not-use-in-prod
       JWT_REFRESH_SECRET: dev-refresh-secret-do-not-use-in-prod
-      NEXT_PUBLIC_APP_NAME: Commune
+      NEXT_PUBLIC_APP_NAME: Hobak
     volumes:
       - ./src:/app/src:ro
       - ./public:/app/public:ro

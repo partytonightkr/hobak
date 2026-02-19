@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect, use } from "react";
+import { useState, useEffect } from "react";
 import { ProfileHeader } from "@/components/profile/ProfileHeader";
 import { ProfileTabs } from "@/components/profile/ProfileTabs";
 import { FollowersList } from "@/components/profile/FollowersList";
@@ -15,8 +15,8 @@ interface ProfileData extends User {
   isFollowedBy: boolean;
 }
 
-export default function ProfilePage({ params }: { params: Promise<{ username: string }> }) {
-  const { username } = use(params);
+export default function ProfilePage({ params }: { params: { username: string } }) {
+  const { username } = params;
   const [profile, setProfile] = useState<ProfileData | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const [activeTab, setActiveTab] = useState("posts");

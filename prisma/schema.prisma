@@ -1,4 +1,4 @@
-// Prisma schema for "Commune" dog-centric social platform (MVP v2.0)
+// Prisma schema for "Hobak" dog-centric social platform (MVP v2.0)
 // PostgreSQL 16+ with Prisma 5.x
 
 generator client {

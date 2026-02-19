@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect, use } from "react";
+import { useState, useEffect } from "react";
 import { DogProfileHeader } from "@/components/dog/DogProfileHeader";
 import { DogProfileTabs } from "@/components/dog/DogProfileTabs";
 import { FeedList } from "@/components/feed/FeedList";
@@ -14,8 +14,8 @@ interface DogProfileData extends Dog {
   isOwnDog: boolean;
 }
 
-export default function DogProfilePage({ params }: { params: Promise<{ username: string }> }) {
-  const { username } = use(params);
+export default function DogProfilePage({ params }: { params: { username: string } }) {
+  const { username } = params;
   const [dog, setDog] = useState<DogProfileData | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const [activeTab, setActiveTab] = useState("posts");
