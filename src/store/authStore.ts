@@ -53,6 +53,23 @@ function clearSessionCookie() {
   }
 }
 
+function saveLastUser(user: { displayName: string; avatarUrl: string | null }) {
+  if (typeof window !== "undefined") {
+    localStorage.setItem("hobak_last_user", JSON.stringify({ displayName: user.displayName, avatarUrl: user.avatarUrl }));
+  }
+}
+
+export function getLastUser(): { displayName: string; avatarUrl: string | null } | null {
+  if (typeof window === "undefined") return null;
+  try {
+    const raw = localStorage.getItem("hobak_last_user");
+    if (!raw) return null;
+    return JSON.parse(raw);
+  } catch {
+    return null;
+  }
+}
+
 export const useAuthStore = create<AuthState>((set, get) => ({
   user: null,
   isLoading: true,
@@ -64,6 +81,7 @@ export const useAuthStore = create<AuthState>((set, get) => ({
     setAccessToken(data.accessToken);
     // Refresh token is stored in HTTP-only cookie by the server
     setSessionCookie();
+    saveLastUser(data.user);
     set({ user: data.user, isAuthenticated: true, isLoading: false });
   },
 
@@ -71,6 +89,7 @@ export const useAuthStore = create<AuthState>((set, get) => ({
     const { data } = await api.post("/auth/register", registerData);
     setAccessToken(data.accessToken);
     setSessionCookie();
+    saveLastUser(data.user);
     set({ user: data.user, isAuthenticated: true, isLoading: false });
   },
 
@@ -96,6 +115,7 @@ export const useAuthStore = create<AuthState>((set, get) => ({
     try {
       const { data } = await api.get("/auth/me");
       setSessionCookie();
+      saveLastUser(data.user);
       set({ user: data.user, isAuthenticated: true, isLoading: false });
     } catch {
       clearAccessToken();
