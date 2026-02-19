@@ -6,7 +6,6 @@ import { useRouter } from "next/navigation";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
-import { Input } from "@/components/ui/Input";
 import { Button } from "@/components/ui/Button";
 import { useAuth } from "@/hooks/useAuth";
 
@@ -60,83 +59,109 @@ export default function RegisterPage() {
   };
 
   return (
-    <div className="flex min-h-screen items-center justify-center bg-surface-50 px-4 dark:bg-surface-950">
-      <div className="w-full max-w-sm">
-        <div className="text-center">
-          <Link href="/" className="inline-flex items-center gap-2">
-            <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-primary-600">
-              <span className="text-xl font-bold text-white">H</span>
+    <div className="flex min-h-screen items-center justify-center bg-surface-100 px-4 py-8 dark:bg-surface-950">
+      <div className="w-full max-w-[440px]">
+        {/* Card header */}
+        <div className="rounded-t-lg border-b border-surface-200 bg-white px-5 pt-5 pb-3 shadow-[0_2px_4px_rgba(0,0,0,0.1),0_8px_16px_rgba(0,0,0,0.1)] dark:border-surface-700 dark:bg-surface-900 dark:shadow-[0_2px_4px_rgba(0,0,0,0.3),0_8px_16px_rgba(0,0,0,0.3)]">
+          <div className="flex items-center justify-between">
+            <div>
+              <h1 className="text-[28px] font-semibold leading-tight text-surface-900 dark:text-surface-50">Sign Up</h1>
+              <p className="mt-1 text-sm text-surface-500">It&apos;s quick and easy.</p>
             </div>
-          </Link>
-          <h1 className="mt-6 text-2xl font-bold text-surface-900 dark:text-surface-50">Create your account</h1>
-          <p className="mt-2 text-sm text-surface-500">Join Hobak and start connecting</p>
+            <Link href="/" className="rounded-full p-2 text-surface-400 hover:bg-surface-100 dark:hover:bg-surface-800">
+              <svg className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
+              </svg>
+            </Link>
+          </div>
         </div>
 
-        <form onSubmit={handleSubmit(onSubmit)} className="mt-8 space-y-4">
-          {error && (
-            <div className="rounded-lg bg-red-50 p-3 text-sm text-red-600 dark:bg-red-900/20 dark:text-red-400">
-              {error}
+        {/* Card body */}
+        <div className="rounded-b-lg bg-white px-5 py-4 shadow-[0_2px_4px_rgba(0,0,0,0.1),0_8px_16px_rgba(0,0,0,0.1)] dark:bg-surface-900 dark:shadow-[0_2px_4px_rgba(0,0,0,0.3),0_8px_16px_rgba(0,0,0,0.3)]">
+          <form onSubmit={handleSubmit(onSubmit)} className="space-y-3">
+            {error && (
+              <div className="rounded-md bg-red-50 p-3 text-sm text-red-600 dark:bg-red-900/20 dark:text-red-400">
+                {error}
+              </div>
+            )}
+
+            {/* Name row — side by side like Facebook */}
+            <div className="grid grid-cols-2 gap-3">
+              <div>
+                <input
+                  type="text"
+                  placeholder="Display name"
+                  className="block w-full rounded-md border border-surface-300 bg-surface-50 px-3 py-[10px] text-[15px] text-surface-900 placeholder:text-surface-400 focus:border-primary-500 focus:bg-white focus:outline-none focus:ring-1 focus:ring-primary-500 dark:border-surface-600 dark:bg-surface-800 dark:text-surface-100 dark:focus:bg-surface-800"
+                  {...register("displayName")}
+                />
+                {errors.displayName && <p className="mt-1 text-xs text-red-500">{errors.displayName.message}</p>}
+              </div>
+              <div>
+                <input
+                  type="text"
+                  placeholder="Username"
+                  className="block w-full rounded-md border border-surface-300 bg-surface-50 px-3 py-[10px] text-[15px] text-surface-900 placeholder:text-surface-400 focus:border-primary-500 focus:bg-white focus:outline-none focus:ring-1 focus:ring-primary-500 dark:border-surface-600 dark:bg-surface-800 dark:text-surface-100 dark:focus:bg-surface-800"
+                  {...register("username")}
+                />
+                {errors.username && <p className="mt-1 text-xs text-red-500">{errors.username.message}</p>}
+              </div>
             </div>
-          )}
 
-          <Input
-            id="displayName"
-            label="Display name"
-            placeholder="John Doe"
-            error={errors.displayName?.message}
-            {...register("displayName")}
-          />
+            <div>
+              <input
+                type="email"
+                placeholder="Email address"
+                className="block w-full rounded-md border border-surface-300 bg-surface-50 px-3 py-[10px] text-[15px] text-surface-900 placeholder:text-surface-400 focus:border-primary-500 focus:bg-white focus:outline-none focus:ring-1 focus:ring-primary-500 dark:border-surface-600 dark:bg-surface-800 dark:text-surface-100 dark:focus:bg-surface-800"
+                {...register("email")}
+              />
+              {errors.email && <p className="mt-1 text-xs text-red-500">{errors.email.message}</p>}
+            </div>
 
-          <Input
-            id="username"
-            label="Username"
-            placeholder="johndoe"
-            error={errors.username?.message}
-            {...register("username")}
-          />
+            <div>
+              <input
+                type="password"
+                placeholder="New password"
+                className="block w-full rounded-md border border-surface-300 bg-surface-50 px-3 py-[10px] text-[15px] text-surface-900 placeholder:text-surface-400 focus:border-primary-500 focus:bg-white focus:outline-none focus:ring-1 focus:ring-primary-500 dark:border-surface-600 dark:bg-surface-800 dark:text-surface-100 dark:focus:bg-surface-800"
+                {...register("password")}
+              />
+              {errors.password && <p className="mt-1 text-xs text-red-500">{errors.password.message}</p>}
+            </div>
 
-          <Input
-            id="email"
-            label="Email"
-            type="email"
-            placeholder="you@example.com"
-            error={errors.email?.message}
-            {...register("email")}
-          />
+            <div>
+              <input
+                type="password"
+                placeholder="Confirm password"
+                className="block w-full rounded-md border border-surface-300 bg-surface-50 px-3 py-[10px] text-[15px] text-surface-900 placeholder:text-surface-400 focus:border-primary-500 focus:bg-white focus:outline-none focus:ring-1 focus:ring-primary-500 dark:border-surface-600 dark:bg-surface-800 dark:text-surface-100 dark:focus:bg-surface-800"
+                {...register("confirmPassword")}
+              />
+              {errors.confirmPassword && <p className="mt-1 text-xs text-red-500">{errors.confirmPassword.message}</p>}
+            </div>
 
-          <Input
-            id="password"
-            label="Password"
-            type="password"
-            placeholder="At least 8 characters"
-            error={errors.password?.message}
-            {...register("password")}
-          />
+            <p className="!mt-4 text-[11px] leading-relaxed text-surface-400">
+              By clicking Sign Up, you agree to our{" "}
+              <Link href="#" className="text-primary-600 hover:underline">Terms</Link>,{" "}
+              <Link href="#" className="text-primary-600 hover:underline">Privacy Policy</Link> and{" "}
+              <Link href="#" className="text-primary-600 hover:underline">Cookies Policy</Link>.
+            </p>
 
-          <Input
-            id="confirmPassword"
-            label="Confirm password"
-            type="password"
-            placeholder="Repeat your password"
-            error={errors.confirmPassword?.message}
-            {...register("confirmPassword")}
-          />
+            <div className="!mt-4 flex justify-center">
+              <Button
+                type="submit"
+                className="!rounded-md !bg-green-500 !px-16 !py-2.5 !text-lg !font-semibold !text-white hover:!bg-green-600 focus:!ring-green-500"
+                isLoading={isLoading}
+              >
+                Sign Up
+              </Button>
+            </div>
+          </form>
 
-          <Button type="submit" className="w-full" isLoading={isLoading}>
-            Create account
-          </Button>
-
-          <p className="text-center text-xs text-surface-500">
-            By signing up, you agree to our Terms of Service and Privacy Policy.
+          <p className="mt-5 text-center text-sm text-surface-500">
+            Already have an account?{" "}
+            <Link href="/login" className="font-medium text-primary-600 hover:underline">
+              Log in
+            </Link>
           </p>
-        </form>
-
-        <p className="mt-8 text-center text-sm text-surface-500">
-          Already have an account?{" "}
-          <Link href="/login" className="font-medium text-primary-600 hover:text-primary-500">
-            Sign in
-          </Link>
-        </p>
+        </div>
       </div>
     </div>
   );

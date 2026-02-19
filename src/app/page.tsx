@@ -1,133 +1,148 @@
 "use client";
 
+import { useState } from "react";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
+import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { z } from "zod";
 import { Button } from "@/components/ui/Button";
+import { useAuth } from "@/hooks/useAuth";
+
+const loginSchema = z.object({
+  email: z.string().email("Invalid email address"),
+  password: z.string().min(1, "Password is required"),
+});
+
+type LoginForm = z.infer<typeof loginSchema>;
 
 export default function LandingPage() {
+  const router = useRouter();
+  const { login } = useAuth({ redirectIfAuthenticated: "/feed" });
+  const [error, setError] = useState("");
+  const [isLoading, setIsLoading] = useState(false);
+
+  const { register, handleSubmit, formState: { errors } } = useForm<LoginForm>({
+    resolver: zodResolver(loginSchema),
+  });
+
+  const onSubmit = async (data: LoginForm) => {
+    setIsLoading(true);
+    setError("");
+    try {
+      await login(data.email, data.password);
+      router.push("/feed");
+    } catch (err: unknown) {
+      const msg = err instanceof Error ? err.message : "Login failed. Please try again.";
+      setError(msg);
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
   return (
-    <div className="min-h-screen">
-      <header className="border-b border-surface-200 bg-white/80 backdrop-blur-md dark:border-surface-700 dark:bg-surface-900/80">
-        <div className="mx-auto flex h-16 max-w-6xl items-center justify-between px-4">
-          <div className="flex items-center gap-2">
-            <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-primary-600">
-              <span className="text-lg font-bold text-white">H</span>
+    <div className="min-h-screen bg-surface-100 dark:bg-surface-950">
+      {/* Main hero section — Facebook-style two-column */}
+      <div className="flex min-h-[calc(100vh-72px)] items-center justify-center px-4 py-12">
+        <div className="mx-auto flex w-full max-w-[980px] flex-col items-center gap-8 lg:flex-row lg:items-center lg:gap-12">
+
+          {/* Left — Branding & tagline */}
+          <div className="flex-1 text-center lg:text-left lg:pr-8">
+            <div className="flex items-center justify-center gap-3 lg:justify-start">
+              {/* Paw logo mark */}
+              <div className="relative h-14 w-14">
+                <div className="absolute bottom-0 left-1/2 h-[38px] w-[44px] -translate-x-1/2 rounded-[22px_22px_20px_20px] bg-primary-600" />
+                <div className="absolute left-[6px] top-0 h-[14px] w-[14px] rounded-full bg-primary-500" />
+                <div className="absolute right-[6px] top-0 h-[14px] w-[14px] rounded-full bg-primary-500" />
+                <div className="absolute left-0 top-[8px] h-[11px] w-[11px] rounded-full bg-primary-400" />
+                <div className="absolute right-0 top-[8px] h-[11px] w-[11px] rounded-full bg-primary-400" />
+              </div>
+              <h1 className="text-5xl font-extrabold tracking-tight text-primary-600 lg:text-6xl">
+                Hobak
+              </h1>
             </div>
-            <span className="text-xl font-bold text-surface-900 dark:text-surface-50">Hobak</span>
+            <p className="mx-auto mt-4 max-w-md text-xl leading-relaxed text-surface-600 lg:mx-0 lg:text-2xl dark:text-surface-400">
+              Connect with dogs and their humans on Hobak.
+            </p>
           </div>
-          <div className="flex items-center gap-3">
-            <Link href="/login">
-              <Button variant="ghost">Log in</Button>
-            </Link>
-            <Link href="/register">
-              <Button>Sign up</Button>
-            </Link>
+
+          {/* Right — Login card */}
+          <div className="w-full max-w-[400px]">
+            <div className="rounded-lg bg-white p-5 shadow-[0_2px_4px_rgba(0,0,0,0.1),0_8px_16px_rgba(0,0,0,0.1)] dark:bg-surface-900 dark:shadow-[0_2px_4px_rgba(0,0,0,0.3),0_8px_16px_rgba(0,0,0,0.3)]">
+              <form onSubmit={handleSubmit(onSubmit)} className="space-y-3">
+                {error && (
+                  <div className="rounded-md bg-red-50 p-3 text-sm text-red-600 dark:bg-red-900/20 dark:text-red-400">
+                    {error}
+                  </div>
+                )}
+
+                <div>
+                  <input
+                    type="email"
+                    placeholder="Email address"
+                    className="block w-full rounded-md border border-surface-300 bg-white px-4 py-[14px] text-[15px] text-surface-900 placeholder:text-surface-400 focus:border-primary-500 focus:outline-none focus:ring-1 focus:ring-primary-500 dark:border-surface-600 dark:bg-surface-800 dark:text-surface-100"
+                    {...register("email")}
+                  />
+                  {errors.email && <p className="mt-1 text-xs text-red-500">{errors.email.message}</p>}
+                </div>
+
+                <div>
+                  <input
+                    type="password"
+                    placeholder="Password"
+                    className="block w-full rounded-md border border-surface-300 bg-white px-4 py-[14px] text-[15px] text-surface-900 placeholder:text-surface-400 focus:border-primary-500 focus:outline-none focus:ring-1 focus:ring-primary-500 dark:border-surface-600 dark:bg-surface-800 dark:text-surface-100"
+                    {...register("password")}
+                  />
+                  {errors.password && <p className="mt-1 text-xs text-red-500">{errors.password.message}</p>}
+                </div>
+
+                <Button type="submit" className="!w-full !rounded-md !py-3 !text-lg !font-semibold" isLoading={isLoading}>
+                  Log In
+                </Button>
+
+                <div className="text-center">
+                  <Link href="/forgot-password" className="text-sm text-primary-600 hover:underline dark:text-primary-400">
+                    Forgot password?
+                  </Link>
+                </div>
+
+                {/* Divider */}
+                <div className="!my-5 border-t border-surface-200 dark:border-surface-700" />
+
+                {/* Create account CTA */}
+                <div className="text-center">
+                  <Link href="/register">
+                    <Button
+                      type="button"
+                      className="!rounded-md !bg-green-500 !px-6 !py-3 !text-[15px] !font-semibold !text-white hover:!bg-green-600 focus:!ring-green-500"
+                    >
+                      Create new account
+                    </Button>
+                  </Link>
+                </div>
+              </form>
+            </div>
+
+            <p className="mt-5 text-center text-sm text-surface-500">
+              <Link href="/register" className="font-semibold hover:underline">Create a Page</Link> for your dog, vet clinic, or dog park.
+            </p>
           </div>
         </div>
-      </header>
+      </div>
 
-      <main>
-        <section className="mx-auto max-w-6xl px-4 py-24 text-center sm:py-32">
-          <h1 className="text-4xl font-bold tracking-tight text-surface-900 sm:text-6xl dark:text-surface-50">
-            Where every pup finds their{" "}
-            <span className="bg-gradient-to-r from-primary-500 to-accent-500 bg-clip-text text-transparent">
-              pack
-            </span>
-          </h1>
-          <p className="mx-auto mt-6 max-w-2xl text-lg text-surface-600 dark:text-surface-400">
-            Hobak is the social platform built for dogs and their humans. Share your pup&apos;s adventures,
-            connect with fellow dog lovers, and build your pack.
-          </p>
-          <div className="mt-10 flex items-center justify-center gap-4">
-            <Link href="/register">
-              <Button size="lg">Get started for free</Button>
-            </Link>
-            <Link href="/login">
-              <Button variant="secondary" size="lg">I already have an account</Button>
-            </Link>
+      {/* Footer */}
+      <footer className="border-t border-surface-200 bg-white py-6 dark:border-surface-700 dark:bg-surface-900">
+        <div className="mx-auto max-w-[980px] px-4">
+          <div className="flex flex-wrap items-center justify-center gap-x-4 gap-y-1 text-xs text-surface-500">
+            <span>English (US)</span>
+            <Link href="#" className="hover:underline">About</Link>
+            <Link href="#" className="hover:underline">Help</Link>
+            <Link href="#" className="hover:underline">Terms</Link>
+            <Link href="#" className="hover:underline">Privacy</Link>
+            <Link href="#" className="hover:underline">Cookies</Link>
+            <Link href="#" className="hover:underline">Developers</Link>
           </div>
-        </section>
-
-        <section className="border-t border-surface-200 bg-white py-20 dark:border-surface-700 dark:bg-surface-900">
-          <div className="mx-auto max-w-6xl px-4">
-            <h2 className="text-center text-3xl font-bold text-surface-900 dark:text-surface-50">
-              Everything your dog needs
-            </h2>
-            <div className="mt-12 grid gap-8 sm:grid-cols-2 lg:grid-cols-3">
-              {[
-                {
-                  title: "Share adventures",
-                  description: "Post your dog's best moments with photos and stories. Let your pup's personality shine.",
-                  icon: (
-                    <svg className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
-                    </svg>
-                  ),
-                },
-                {
-                  title: "Build your pack",
-                  description: "Follow other dogs, discover new friends, and connect with fellow dog lovers nearby.",
-                  icon: (
-                    <svg className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" />
-                    </svg>
-                  ),
-                },
-                {
-                  title: "Stay in the loop",
-                  description: "Notifications for likes, comments, follows, and mentions. Never miss what matters.",
-                  icon: (
-                    <svg className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9" />
-                    </svg>
-                  ),
-                },
-                {
-                  title: "Discover dogs",
-                  description: "Find dogs by breed, location, or personality. Your pup's next best friend is a search away.",
-                  icon: (
-                    <svg className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
-                    </svg>
-                  ),
-                },
-                {
-                  title: "Safe and moderated",
-                  description: "Report inappropriate content and users. Proactive moderation keeps the community healthy.",
-                  icon: (
-                    <svg className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" />
-                    </svg>
-                  ),
-                },
-              ].map((feature) => (
-                <div key={feature.title} className="rounded-xl border border-surface-200 p-6 dark:border-surface-700">
-                  <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-primary-100 text-primary-600 dark:bg-primary-900/30 dark:text-primary-400">
-                    {feature.icon}
-                  </div>
-                  <h3 className="mt-4 text-lg font-semibold text-surface-900 dark:text-surface-50">{feature.title}</h3>
-                  <p className="mt-2 text-sm text-surface-600 dark:text-surface-400">{feature.description}</p>
-                </div>
-              ))}
-            </div>
-          </div>
-        </section>
-
-        <section className="py-20">
-          <div className="mx-auto max-w-3xl px-4 text-center">
-            <h2 className="text-3xl font-bold text-surface-900 dark:text-surface-50">Ready to join the pack?</h2>
-            <p className="mt-4 text-lg text-surface-600 dark:text-surface-400">
-              Create a profile for your pup and start connecting with dogs and their humans.
-            </p>
-            <Link href="/register" className="mt-8 inline-block">
-              <Button size="lg">Create your account</Button>
-            </Link>
-          </div>
-        </section>
-      </main>
-
-      <footer className="border-t border-surface-200 bg-white py-8 dark:border-surface-700 dark:bg-surface-900">
-        <div className="mx-auto max-w-6xl px-4 text-center text-sm text-surface-500">
-          <p>Hobak - Your Best Friend</p>
+          <p className="mt-3 text-center text-xs text-surface-400">Hobak &copy; 2026</p>
         </div>
       </footer>
     </div>
