@@ -1,0 +1,224 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Commune — Luna's Profile</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+  <script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {
+          fontFamily: { sans: ['Inter', 'system-ui', 'sans-serif'] },
+          colors: {
+            brand: {
+              50: '#eff6ff', 100: '#dbeafe', 200: '#bfdbfe', 300: '#93c5fd',
+              400: '#60a5fa', 500: '#3b82f6', 600: '#2563eb', 700: '#1d4ed8',
+              800: '#1e40af', 900: '#1e3a8a'
+            }
+          }
+        }
+      }
+    }
+  </script>
+  <style>body { font-family: 'Inter', system-ui, sans-serif; }</style>
+</head>
+<body class="bg-slate-50 dark:bg-slate-950 text-slate-900 dark:text-slate-100 antialiased">
+
+  <div class="min-h-screen max-w-2xl mx-auto bg-white dark:bg-slate-900 border-x border-slate-200 dark:border-slate-800">
+    <!-- Header -->
+    <div class="sticky top-0 z-20 bg-white/80 dark:bg-slate-900/80 backdrop-blur-xl border-b border-slate-200 dark:border-slate-800">
+      <div class="flex items-center gap-4 px-4 h-14">
+        <a href="feed-dogs.html" class="p-1 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-lg transition">
+          <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"/></svg>
+        </a>
+        <div>
+          <h1 class="font-bold text-base">Luna</h1>
+          <p class="text-xs text-slate-500">Golden Retriever</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Cover / Photo Gallery -->
+    <div class="relative">
+      <div class="h-56 sm:h-64 bg-gradient-to-br from-amber-200 via-orange-200 to-yellow-200 dark:from-amber-900/30 dark:via-orange-900/30 dark:to-yellow-900/30 flex items-center justify-center">
+        <div class="text-center">
+          <svg class="w-16 h-16 text-amber-400 mx-auto" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"/></svg>
+          <p class="text-xs text-amber-500 font-medium mt-1">Dog photo</p>
+        </div>
+      </div>
+      <!-- Photo count badge -->
+      <div class="absolute bottom-3 right-3 bg-black/60 backdrop-blur-sm text-white text-xs font-medium px-3 py-1 rounded-full flex items-center gap-1">
+        <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"/></svg>
+        12 photos
+      </div>
+    </div>
+
+    <!-- Dog Info -->
+    <div class="px-4 py-5">
+      <!-- Name + Actions -->
+      <div class="flex items-start justify-between mb-4">
+        <div>
+          <div class="flex items-center gap-2">
+            <h2 class="text-2xl font-bold">Luna</h2>
+            <span class="text-lg">&#x1F43E;</span>
+          </div>
+          <p class="text-sm text-slate-500">@luna_the_golden</p>
+        </div>
+        <div class="flex items-center gap-2">
+          <button class="p-2 rounded-full border border-slate-300 dark:border-slate-600 hover:bg-slate-100 dark:hover:bg-slate-800 transition" title="Chat with Luna's AI">
+            <svg class="w-5 h-5 text-purple-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"/></svg>
+          </button>
+          <button class="px-5 py-2 rounded-full bg-brand-600 text-white text-sm font-semibold hover:bg-brand-700 transition">
+            Follow
+          </button>
+        </div>
+      </div>
+
+      <!-- Quick Stats -->
+      <div class="grid grid-cols-4 gap-3 mb-5">
+        <div class="bg-slate-50 dark:bg-slate-800 rounded-xl p-3 text-center">
+          <p class="text-lg font-bold">3</p>
+          <p class="text-[10px] text-slate-500 uppercase tracking-wide">Years old</p>
+        </div>
+        <div class="bg-slate-50 dark:bg-slate-800 rounded-xl p-3 text-center">
+          <p class="text-lg font-bold">65</p>
+          <p class="text-[10px] text-slate-500 uppercase tracking-wide">Pounds</p>
+        </div>
+        <div class="bg-slate-50 dark:bg-slate-800 rounded-xl p-3 text-center">
+          <p class="text-lg font-bold">F</p>
+          <p class="text-[10px] text-slate-500 uppercase tracking-wide">Gender</p>
+        </div>
+        <div class="bg-slate-50 dark:bg-slate-800 rounded-xl p-3 text-center">
+          <p class="text-lg font-bold text-green-600">&#10003;</p>
+          <p class="text-[10px] text-slate-500 uppercase tracking-wide">Vaccinated</p>
+        </div>
+      </div>
+
+      <!-- Breed & Details -->
+      <div class="mb-5">
+        <div class="flex items-center gap-2 mb-2">
+          <span class="px-2.5 py-1 rounded-lg bg-amber-100 dark:bg-amber-900/30 text-amber-700 dark:text-amber-300 text-xs font-semibold">Golden Retriever</span>
+          <span class="px-2.5 py-1 rounded-lg bg-green-100 dark:bg-green-900/30 text-green-700 dark:text-green-300 text-xs font-semibold">High Energy</span>
+          <span class="px-2.5 py-1 rounded-lg bg-blue-100 dark:bg-blue-900/30 text-blue-700 dark:text-blue-300 text-xs font-semibold">Well Trained</span>
+        </div>
+      </div>
+
+      <!-- Personality Bio -->
+      <div class="mb-5">
+        <h3 class="text-sm font-semibold mb-2">About Luna</h3>
+        <p class="text-sm text-slate-600 dark:text-slate-400 leading-relaxed">
+          Luna is a goofy golden who lives for belly rubs and chasing squirrels. She gets super excited when she sees other dogs and always tries to make friends. Her favorite activity is swimming at the lake. She sleeps upside down and has been known to steal socks.
+        </p>
+      </div>
+
+      <!-- Traits -->
+      <div class="mb-5">
+        <h3 class="text-sm font-semibold mb-2">Traits</h3>
+        <div class="flex flex-wrap gap-1.5">
+          <span class="px-3 py-1 rounded-full bg-slate-100 dark:bg-slate-800 text-xs font-medium">Friendly with dogs</span>
+          <span class="px-3 py-1 rounded-full bg-slate-100 dark:bg-slate-800 text-xs font-medium">Friendly with people</span>
+          <span class="px-3 py-1 rounded-full bg-slate-100 dark:bg-slate-800 text-xs font-medium">Loves the park</span>
+          <span class="px-3 py-1 rounded-full bg-slate-100 dark:bg-slate-800 text-xs font-medium">Large (65 lbs)</span>
+          <span class="px-3 py-1 rounded-full bg-slate-100 dark:bg-slate-800 text-xs font-medium">Loves water</span>
+          <span class="px-3 py-1 rounded-full bg-slate-100 dark:bg-slate-800 text-xs font-medium">Fetch enthusiast</span>
+        </div>
+      </div>
+
+      <!-- Owner -->
+      <div class="mb-5">
+        <h3 class="text-sm font-semibold mb-2">Owner</h3>
+        <div class="flex items-center gap-3 p-3 bg-slate-50 dark:bg-slate-800 rounded-xl">
+          <div class="w-10 h-10 rounded-full bg-gradient-to-br from-pink-400 to-rose-500 flex items-center justify-center text-white font-semibold text-sm">SC</div>
+          <div class="flex-1">
+            <p class="text-sm font-semibold">Sarah Chen</p>
+            <p class="text-xs text-slate-500">@sarahc</p>
+          </div>
+          <button class="text-xs text-brand-600 dark:text-brand-400 font-medium hover:underline">View profile</button>
+        </div>
+      </div>
+
+      <!-- Social Stats -->
+      <div class="flex items-center gap-6 mb-5">
+        <a href="#" class="hover:underline">
+          <span class="font-bold text-sm">847</span>
+          <span class="text-sm text-slate-500">Followers</span>
+        </a>
+        <a href="#" class="hover:underline">
+          <span class="font-bold text-sm">234</span>
+          <span class="text-sm text-slate-500">Following</span>
+        </a>
+        <a href="#" class="hover:underline">
+          <span class="font-bold text-sm">56</span>
+          <span class="text-sm text-slate-500">Posts</span>
+        </a>
+      </div>
+
+      <!-- Quick Action Cards -->
+      <div class="grid grid-cols-3 gap-3 mb-5">
+        <a href="ai-chat.html" class="bg-purple-50 dark:bg-purple-900/20 rounded-xl p-4 text-center hover:bg-purple-100 dark:hover:bg-purple-900/30 transition">
+          <svg class="w-6 h-6 text-purple-500 mx-auto mb-1.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"/></svg>
+          <p class="text-xs font-semibold text-purple-700 dark:text-purple-300">AI Chat</p>
+          <p class="text-[10px] text-purple-500">Talk to Luna</p>
+        </a>
+        <a href="medical.html" class="bg-green-50 dark:bg-green-900/20 rounded-xl p-4 text-center hover:bg-green-100 dark:hover:bg-green-900/30 transition">
+          <svg class="w-6 h-6 text-green-500 mx-auto mb-1.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/></svg>
+          <p class="text-xs font-semibold text-green-700 dark:text-green-300">Medical</p>
+          <p class="text-[10px] text-green-500">Health records</p>
+        </a>
+        <a href="location.html" class="bg-blue-50 dark:bg-blue-900/20 rounded-xl p-4 text-center hover:bg-blue-100 dark:hover:bg-blue-900/30 transition">
+          <svg class="w-6 h-6 text-blue-500 mx-auto mb-1.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"/></svg>
+          <p class="text-xs font-semibold text-blue-700 dark:text-blue-300">Location</p>
+          <p class="text-[10px] text-blue-500">Find nearby</p>
+        </a>
+      </div>
+    </div>
+
+    <!-- Tabs -->
+    <div class="border-b border-slate-200 dark:border-slate-800 flex">
+      <button class="flex-1 py-3 text-sm font-semibold text-brand-600 dark:text-brand-400 border-b-2 border-brand-600 dark:border-brand-400">Posts</button>
+      <button class="flex-1 py-3 text-sm text-slate-500 hover:bg-slate-50 dark:hover:bg-slate-800/50 transition">Photos</button>
+      <button class="flex-1 py-3 text-sm text-slate-500 hover:bg-slate-50 dark:hover:bg-slate-800/50 transition">Friends</button>
+    </div>
+
+    <!-- Dog's Posts -->
+    <div class="divide-y divide-slate-200 dark:divide-slate-800">
+      <article class="p-4 hover:bg-slate-50 dark:hover:bg-slate-800/50 transition cursor-pointer">
+        <div class="flex gap-3">
+          <div class="w-10 h-10 rounded-full bg-gradient-to-br from-amber-300 to-orange-400 flex items-center justify-center text-sm">&#x1F436;</div>
+          <div class="flex-1">
+            <div class="flex items-center gap-2 mb-1">
+              <span class="font-semibold text-sm">Luna</span>
+              <span class="text-xs text-slate-500">@luna_the_golden</span>
+              <span class="text-xs text-slate-400">·</span>
+              <span class="text-xs text-slate-500">3h</span>
+            </div>
+            <p class="text-sm leading-relaxed mb-3">Went to the park today and made THREE new friends! One was a tiny chihuahua who was surprisingly brave. We played fetch until my human got tired (typical). Best. Day. Ever. <span class="text-brand-500">#parkday</span> <span class="text-brand-500">#goldenlife</span></p>
+            <div class="rounded-2xl overflow-hidden border border-slate-200 dark:border-slate-700 mb-3">
+              <div class="bg-gradient-to-br from-green-100 to-emerald-100 dark:from-green-900/20 dark:to-emerald-900/20 h-44 flex items-center justify-center">
+                <svg class="w-10 h-10 text-green-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"/></svg>
+              </div>
+            </div>
+            <div class="flex items-center gap-8 text-slate-500">
+              <button class="flex items-center gap-1.5 text-xs hover:text-brand-500 transition">
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"/></svg>
+                24
+              </button>
+              <button class="flex items-center gap-1.5 text-xs hover:text-red-500 transition">
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"/></svg>
+                186
+              </button>
+              <button class="flex items-center gap-1.5 text-xs hover:text-brand-500 transition ml-auto">
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-8l-4-4m0 0L8 8m4-4v12"/></svg>
+              </button>
+            </div>
+          </div>
+        </div>
+      </article>
+    </div>
+  </div>
+
+</body>
+</html>

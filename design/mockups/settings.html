@@ -1,0 +1,295 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Commune — Settings</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+  <script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {
+          fontFamily: { sans: ['Inter', 'system-ui', 'sans-serif'] },
+          colors: {
+            brand: {
+              50: '#eff6ff', 100: '#dbeafe', 200: '#bfdbfe', 300: '#93c5fd',
+              400: '#60a5fa', 500: '#3b82f6', 600: '#2563eb', 700: '#1d4ed8',
+              800: '#1e40af', 900: '#1e3a8a'
+            }
+          }
+        }
+      }
+    }
+  </script>
+  <style>
+    body { font-family: 'Inter', system-ui, sans-serif; }
+    .toggle-checkbox:checked { background-color: #2563eb; }
+    .toggle-checkbox:checked::after { transform: translateX(100%); }
+    .toggle-checkbox {
+      appearance: none;
+      width: 44px; height: 24px;
+      background-color: #d1d5db;
+      border-radius: 9999px;
+      position: relative;
+      cursor: pointer;
+      transition: background-color 200ms;
+    }
+    .dark .toggle-checkbox { background-color: #4b5563; }
+    .toggle-checkbox::after {
+      content: '';
+      position: absolute;
+      top: 2px; left: 2px;
+      width: 20px; height: 20px;
+      background: white;
+      border-radius: 9999px;
+      transition: transform 200ms;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+    }
+  </style>
+</head>
+<body class="bg-slate-50 dark:bg-slate-950 text-slate-900 dark:text-slate-100 antialiased">
+
+  <div class="min-h-screen flex">
+    <!-- Settings Sidebar (desktop) -->
+    <aside class="hidden lg:block w-72 border-r border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 p-6 fixed h-full overflow-y-auto">
+      <div class="flex items-center gap-3 mb-8">
+        <a href="feed.html" class="p-1 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-lg transition">
+          <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"/></svg>
+        </a>
+        <h1 class="text-xl font-bold">Settings</h1>
+      </div>
+
+      <nav class="space-y-1">
+        <a href="#profile" class="flex items-center gap-3 px-3 py-2.5 rounded-xl bg-brand-50 dark:bg-brand-900/20 text-brand-600 dark:text-brand-400 font-medium text-sm">
+          <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"/></svg>
+          Profile
+        </a>
+        <a href="#account" class="flex items-center gap-3 px-3 py-2.5 rounded-xl text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800 transition text-sm">
+          <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.066 2.573c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.573 1.066c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.066-2.573c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/></svg>
+          Account
+        </a>
+        <a href="#privacy" class="flex items-center gap-3 px-3 py-2.5 rounded-xl text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800 transition text-sm">
+          <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"/></svg>
+          Privacy & Safety
+        </a>
+        <a href="#appearance" class="flex items-center gap-3 px-3 py-2.5 rounded-xl text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800 transition text-sm">
+          <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 21a4 4 0 01-4-4V5a2 2 0 012-2h4a2 2 0 012 2v12a4 4 0 01-4 4zm0 0h12a2 2 0 002-2v-4a2 2 0 00-2-2h-2.343M11 7.343l1.657-1.657a2 2 0 012.828 0l2.829 2.829a2 2 0 010 2.828l-8.486 8.485M7 17h.01"/></svg>
+          Appearance
+        </a>
+        <a href="#subscription" class="flex items-center gap-3 px-3 py-2.5 rounded-xl text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800 transition text-sm">
+          <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 10h18M7 15h1m4 0h1m-7 4h12a3 3 0 003-3V8a3 3 0 00-3-3H6a3 3 0 00-3 3v8a3 3 0 003 3z"/></svg>
+          Subscription
+        </a>
+      </nav>
+    </aside>
+
+    <!-- Main Content -->
+    <main class="flex-1 lg:ml-72">
+      <!-- Mobile Header -->
+      <div class="lg:hidden sticky top-0 z-20 bg-white/80 dark:bg-slate-900/80 backdrop-blur-xl border-b border-slate-200 dark:border-slate-800">
+        <div class="flex items-center gap-4 px-4 h-14">
+          <a href="feed.html" class="p-1">
+            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"/></svg>
+          </a>
+          <h1 class="font-bold">Settings</h1>
+        </div>
+      </div>
+
+      <div class="max-w-2xl mx-auto p-4 sm:p-8 space-y-8">
+
+        <!-- Profile Section -->
+        <section id="profile">
+          <h2 class="text-lg font-bold mb-1">Profile</h2>
+          <p class="text-sm text-slate-500 mb-6">Manage your public profile information</p>
+
+          <div class="bg-white dark:bg-slate-900 rounded-2xl border border-slate-200 dark:border-slate-800 overflow-hidden">
+            <!-- Avatar -->
+            <div class="p-6 border-b border-slate-100 dark:border-slate-800">
+              <label class="block text-sm font-medium mb-3">Profile photo</label>
+              <div class="flex items-center gap-4">
+                <div class="w-20 h-20 rounded-full bg-gradient-to-br from-brand-400 to-brand-600 flex items-center justify-center text-white text-2xl font-bold">JD</div>
+                <div class="space-y-2">
+                  <button class="px-4 py-2 rounded-xl bg-brand-600 text-white text-sm font-medium hover:bg-brand-700 transition">Upload photo</button>
+                  <button class="px-4 py-2 rounded-xl text-red-600 dark:text-red-400 text-sm font-medium hover:bg-red-50 dark:hover:bg-red-900/10 transition">Remove</button>
+                </div>
+              </div>
+            </div>
+
+            <!-- Form Fields -->
+            <div class="p-6 space-y-5">
+              <div>
+                <label class="block text-sm font-medium mb-1.5">Display name</label>
+                <input type="text" value="Jane Doe" class="w-full px-4 py-2.5 rounded-xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 text-sm focus:outline-none focus:border-brand-500 focus:ring-2 focus:ring-brand-500/20 transition">
+              </div>
+              <div>
+                <label class="block text-sm font-medium mb-1.5">Username</label>
+                <div class="relative">
+                  <span class="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400 text-sm">@</span>
+                  <input type="text" value="janedoe" class="w-full pl-8 pr-4 py-2.5 rounded-xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 text-sm focus:outline-none focus:border-brand-500 focus:ring-2 focus:ring-brand-500/20 transition">
+                </div>
+              </div>
+              <div>
+                <label class="block text-sm font-medium mb-1.5">Bio</label>
+                <textarea rows="3" class="w-full px-4 py-2.5 rounded-xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 text-sm focus:outline-none focus:border-brand-500 focus:ring-2 focus:ring-brand-500/20 transition resize-none">Full-stack developer. Building cool things on the web.</textarea>
+                <p class="text-xs text-slate-400 mt-1">42/280 characters</p>
+              </div>
+              <div class="grid sm:grid-cols-2 gap-4">
+                <div>
+                  <label class="block text-sm font-medium mb-1.5">Location</label>
+                  <input type="text" value="San Francisco, CA" class="w-full px-4 py-2.5 rounded-xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 text-sm focus:outline-none focus:border-brand-500 focus:ring-2 focus:ring-brand-500/20 transition">
+                </div>
+                <div>
+                  <label class="block text-sm font-medium mb-1.5">Website</label>
+                  <input type="url" value="https://janedoe.dev" class="w-full px-4 py-2.5 rounded-xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 text-sm focus:outline-none focus:border-brand-500 focus:ring-2 focus:ring-brand-500/20 transition">
+                </div>
+              </div>
+            </div>
+
+            <!-- Save -->
+            <div class="px-6 py-4 bg-slate-50 dark:bg-slate-800/50 flex items-center justify-end gap-3">
+              <button class="px-4 py-2 rounded-xl text-sm font-medium text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800 transition">Cancel</button>
+              <button class="px-6 py-2 rounded-xl bg-brand-600 text-white text-sm font-semibold hover:bg-brand-700 transition shadow-sm">Save Changes</button>
+            </div>
+          </div>
+        </section>
+
+
+        <!-- Privacy Section -->
+        <section id="privacy">
+          <h2 class="text-lg font-bold mb-1">Privacy & Safety</h2>
+          <p class="text-sm text-slate-500 mb-6">Control your privacy and safety settings</p>
+
+          <div class="bg-white dark:bg-slate-900 rounded-2xl border border-slate-200 dark:border-slate-800 divide-y divide-slate-100 dark:divide-slate-800">
+            <div class="flex items-center justify-between p-5">
+              <div>
+                <p class="text-sm font-medium">Show activity status</p>
+                <p class="text-xs text-slate-500 mt-0.5">Let others see when you were last active</p>
+              </div>
+              <input type="checkbox" class="toggle-checkbox" checked>
+            </div>
+            <div class="flex items-center justify-between p-5">
+              <div>
+                <p class="text-sm font-medium">Hide likes count</p>
+                <p class="text-xs text-slate-500 mt-0.5">Other users won't see the number of likes on your posts</p>
+              </div>
+              <input type="checkbox" class="toggle-checkbox">
+            </div>
+          </div>
+
+          <!-- Blocked accounts -->
+          <div class="mt-4 bg-white dark:bg-slate-900 rounded-2xl border border-slate-200 dark:border-slate-800 p-5">
+            <div class="flex items-center justify-between">
+              <div>
+                <p class="text-sm font-medium">Blocked accounts</p>
+                <p class="text-xs text-slate-500 mt-0.5">2 accounts blocked</p>
+              </div>
+              <button class="text-sm text-brand-600 dark:text-brand-400 font-medium hover:underline">Manage</button>
+            </div>
+          </div>
+        </section>
+
+        <!-- Appearance Section -->
+        <section id="appearance">
+          <h2 class="text-lg font-bold mb-1">Appearance</h2>
+          <p class="text-sm text-slate-500 mb-6">Customize how Commune looks</p>
+
+          <div class="bg-white dark:bg-slate-900 rounded-2xl border border-slate-200 dark:border-slate-800 p-6">
+            <label class="block text-sm font-medium mb-4">Theme</label>
+            <div class="grid grid-cols-3 gap-3">
+              <button onclick="document.documentElement.classList.remove('dark')" class="p-4 rounded-xl border-2 border-brand-500 bg-white text-center">
+                <div class="w-8 h-8 rounded-full bg-white border border-slate-200 mx-auto mb-2"></div>
+                <span class="text-xs font-medium text-slate-900">Light</span>
+              </button>
+              <button onclick="document.documentElement.classList.add('dark')" class="p-4 rounded-xl border-2 border-slate-200 dark:border-slate-700 bg-slate-900 text-center">
+                <div class="w-8 h-8 rounded-full bg-slate-800 border border-slate-700 mx-auto mb-2"></div>
+                <span class="text-xs font-medium text-white">Dark</span>
+              </button>
+              <button class="p-4 rounded-xl border-2 border-slate-200 dark:border-slate-700 bg-gradient-to-b from-white to-slate-900 text-center">
+                <div class="w-8 h-8 rounded-full bg-gradient-to-b from-white to-slate-800 border border-slate-300 mx-auto mb-2"></div>
+                <span class="text-xs font-medium text-slate-600 dark:text-slate-300">System</span>
+              </button>
+            </div>
+
+            <label class="block text-sm font-medium mt-6 mb-3">Accent color</label>
+            <div class="flex items-center gap-3">
+              <button class="w-8 h-8 rounded-full bg-brand-500 ring-2 ring-brand-500 ring-offset-2 dark:ring-offset-slate-900"></button>
+              <button class="w-8 h-8 rounded-full bg-blue-500"></button>
+              <button class="w-8 h-8 rounded-full bg-green-500"></button>
+              <button class="w-8 h-8 rounded-full bg-amber-500"></button>
+              <button class="w-8 h-8 rounded-full bg-rose-500"></button>
+              <button class="w-8 h-8 rounded-full bg-violet-500"></button>
+            </div>
+
+            <label class="block text-sm font-medium mt-6 mb-3">Font size</label>
+            <div class="flex items-center gap-4">
+              <span class="text-xs text-slate-500">A</span>
+              <input type="range" min="12" max="20" value="16" class="flex-1 accent-brand-600">
+              <span class="text-lg text-slate-500">A</span>
+            </div>
+          </div>
+        </section>
+
+        <!-- Subscription Section -->
+        <section id="subscription">
+          <h2 class="text-lg font-bold mb-1">Subscription</h2>
+          <p class="text-sm text-slate-500 mb-6">Manage your plan and billing</p>
+
+          <div class="bg-white dark:bg-slate-900 rounded-2xl border border-slate-200 dark:border-slate-800 p-6">
+            <div class="flex items-center justify-between mb-4">
+              <div>
+                <div class="flex items-center gap-2">
+                  <h3 class="font-semibold">Free Plan</h3>
+                  <span class="px-2 py-0.5 rounded-md bg-slate-100 dark:bg-slate-800 text-xs font-medium text-slate-600 dark:text-slate-400">Current</span>
+                </div>
+                <p class="text-sm text-slate-500 mt-1">Access to all core features</p>
+              </div>
+            </div>
+
+            <!-- Premium upsell -->
+            <div class="p-4 rounded-xl bg-gradient-to-r from-brand-50 to-purple-50 dark:from-brand-900/20 dark:to-purple-900/20 border border-brand-200 dark:border-brand-800">
+              <div class="flex items-start justify-between gap-4">
+                <div>
+                  <h4 class="font-semibold text-sm text-brand-700 dark:text-brand-300">Upgrade to Premium</h4>
+                  <p class="text-xs text-slate-600 dark:text-slate-400 mt-1">Get verified badge, analytics dashboard, priority support, and ad-free experience.</p>
+                  <p class="text-sm font-bold text-brand-600 dark:text-brand-400 mt-2">$9.99/mo <span class="font-normal text-xs text-slate-500">or $99/year</span></p>
+                </div>
+                <button class="px-5 py-2 rounded-xl bg-brand-600 text-white text-sm font-semibold hover:bg-brand-700 transition shadow-sm shrink-0">
+                  Upgrade
+                </button>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- Danger Zone -->
+        <section>
+          <h2 class="text-lg font-bold mb-1 text-red-600 dark:text-red-400">Danger Zone</h2>
+          <p class="text-sm text-slate-500 mb-6">Irreversible and destructive actions</p>
+
+          <div class="bg-white dark:bg-slate-900 rounded-2xl border border-red-200 dark:border-red-900/50 divide-y divide-red-100 dark:divide-red-900/30">
+            <div class="flex items-center justify-between p-5">
+              <div>
+                <p class="text-sm font-medium">Deactivate account</p>
+                <p class="text-xs text-slate-500 mt-0.5">Temporarily disable your account</p>
+              </div>
+              <button class="px-4 py-2 rounded-xl border border-red-200 dark:border-red-800 text-red-600 dark:text-red-400 text-sm font-medium hover:bg-red-50 dark:hover:bg-red-900/10 transition">Deactivate</button>
+            </div>
+            <div class="flex items-center justify-between p-5">
+              <div>
+                <p class="text-sm font-medium">Delete account</p>
+                <p class="text-xs text-slate-500 mt-0.5">Permanently delete your account and all data. 30-day grace period.</p>
+              </div>
+              <button class="px-4 py-2 rounded-xl bg-red-600 text-white text-sm font-medium hover:bg-red-700 transition">Delete</button>
+            </div>
+          </div>
+        </section>
+
+        <div class="h-8"></div>
+      </div>
+    </main>
+  </div>
+
+</body>
+</html>

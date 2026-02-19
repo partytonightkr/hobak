@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Commune — Chat with Luna</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+  <script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {
+          fontFamily: { sans: ['Inter', 'system-ui', 'sans-serif'] },
+          colors: {
+            brand: {
+              50: '#eff6ff', 100: '#dbeafe', 200: '#bfdbfe', 300: '#93c5fd',
+              400: '#60a5fa', 500: '#3b82f6', 600: '#2563eb', 700: '#1d4ed8',
+              800: '#1e40af', 900: '#1e3a8a'
+            }
+          }
+        }
+      }
+    }
+  </script>
+  <style>
+    body { font-family: 'Inter', system-ui, sans-serif; }
+    .typing-dot { animation: typing 1.4s infinite; }
+    .typing-dot:nth-child(2) { animation-delay: 0.2s; }
+    .typing-dot:nth-child(3) { animation-delay: 0.4s; }
+    @keyframes typing {
+      0%, 60%, 100% { opacity: 0.3; transform: translateY(0); }
+      30% { opacity: 1; transform: translateY(-4px); }
+    }
+  </style>
+</head>
+<body class="bg-slate-50 dark:bg-slate-950 text-slate-900 dark:text-slate-100 antialiased">
+
+  <div class="min-h-screen max-w-2xl mx-auto bg-white dark:bg-slate-900 border-x border-slate-200 dark:border-slate-800 flex flex-col">
+    <!-- Header -->
+    <div class="sticky top-0 z-20 bg-white/80 dark:bg-slate-900/80 backdrop-blur-xl border-b border-slate-200 dark:border-slate-800">
+      <div class="flex items-center gap-3 px-4 h-14">
+        <a href="dog-profile.html" class="p-1 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-lg transition">
+          <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"/></svg>
+        </a>
+        <div class="w-8 h-8 rounded-full bg-gradient-to-br from-amber-300 to-orange-400 flex items-center justify-center text-sm">&#x1F436;</div>
+        <div class="flex-1">
+          <h1 class="font-bold text-sm">Luna</h1>
+          <div class="flex items-center gap-1">
+            <span class="w-1.5 h-1.5 rounded-full bg-purple-500"></span>
+            <span class="text-[10px] text-purple-500 font-medium">AI Personality</span>
+          </div>
+        </div>
+        <button class="p-2 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-lg transition" title="Chat info">
+          <svg class="w-5 h-5 text-slate-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+        </button>
+      </div>
+    </div>
+
+    <!-- AI Disclaimer Banner -->
+    <div class="bg-purple-50 dark:bg-purple-900/20 border-b border-purple-100 dark:border-purple-900/30 px-4 py-2.5">
+      <div class="flex items-start gap-2">
+        <svg class="w-4 h-4 text-purple-500 mt-0.5 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z"/></svg>
+        <p class="text-[11px] text-purple-700 dark:text-purple-300 leading-relaxed">
+          This is an <strong>AI personality</strong> created from Luna's profile. Responses are generated, not from the real dog. <a href="#" class="underline font-medium">Learn more</a>
+        </p>
+      </div>
+    </div>
+
+    <!-- Chat Messages -->
+    <div class="flex-1 overflow-y-auto px-4 py-6 space-y-4">
+
+      <!-- System intro message -->
+      <div class="flex justify-center mb-6">
+        <div class="bg-slate-100 dark:bg-slate-800 rounded-full px-4 py-1.5">
+          <p class="text-[11px] text-slate-500 text-center">Luna's AI personality is based on her profile traits and owner's description</p>
+        </div>
+      </div>
+
+      <!-- Bot message 1 -->
+      <div class="flex gap-2.5 max-w-[85%]">
+        <div class="w-8 h-8 rounded-full bg-gradient-to-br from-amber-300 to-orange-400 flex items-center justify-center text-sm shrink-0 mt-1">&#x1F436;</div>
+        <div>
+          <div class="bg-slate-100 dark:bg-slate-800 rounded-2xl rounded-tl-md px-4 py-3">
+            <p class="text-sm leading-relaxed">*tail wagging intensifies* Oh hi hi hi!! A new friend! I'm Luna and I LOVE meeting new people! Do you have any treats? Or a tennis ball? I really like tennis balls. And belly rubs. And squirrels (but don't tell my human I chase them).</p>
+          </div>
+          <p class="text-[10px] text-slate-400 mt-1 ml-1">2:34 PM</p>
+        </div>
+      </div>
+
+      <!-- User message 1 -->
+      <div class="flex justify-end">
+        <div class="max-w-[85%]">
+          <div class="bg-brand-600 text-white rounded-2xl rounded-tr-md px-4 py-3">
+            <p class="text-sm leading-relaxed">Hey Luna! You're such a good girl. What's your favorite thing to do at the park?</p>
+          </div>
+          <p class="text-[10px] text-slate-400 mt-1 mr-1 text-right">2:35 PM</p>
+        </div>
+      </div>
+
+      <!-- Bot message 2 -->
+      <div class="flex gap-2.5 max-w-[85%]">
+        <div class="w-8 h-8 rounded-full bg-gradient-to-br from-amber-300 to-orange-400 flex items-center justify-center text-sm shrink-0 mt-1">&#x1F436;</div>
+        <div>
+          <div class="bg-slate-100 dark:bg-slate-800 rounded-2xl rounded-tl-md px-4 py-3">
+            <p class="text-sm leading-relaxed">OMG THE PARK?! *spins in circle* That's my FAVORITE place!! Okay okay okay so first I run REALLY fast to the big field, then I find ALL the other dogs and sniff them (it's how we say hello, very important), then my human throws the ball and I fetch it like a MILLION times. Sometimes there's a lake and I jump right in! My human says I "splash too much" but I think she's wrong. Also there's usually a squirrel near the big oak tree and I have a LOT of feelings about that.</p>
+          </div>
+          <p class="text-[10px] text-slate-400 mt-1 ml-1">2:35 PM</p>
+        </div>
+      </div>
+
+      <!-- User message 2 -->
+      <div class="flex justify-end">
+        <div class="max-w-[85%]">
+          <div class="bg-brand-600 text-white rounded-2xl rounded-tr-md px-4 py-3">
+            <p class="text-sm leading-relaxed">Do you want to have a playdate with my dog Max?</p>
+          </div>
+          <p class="text-[10px] text-slate-400 mt-1 mr-1 text-right">2:36 PM</p>
+        </div>
+      </div>
+
+      <!-- Bot message 3 -->
+      <div class="flex gap-2.5 max-w-[85%]">
+        <div class="w-8 h-8 rounded-full bg-gradient-to-br from-amber-300 to-orange-400 flex items-center justify-center text-sm shrink-0 mt-1">&#x1F436;</div>
+        <div>
+          <div class="bg-slate-100 dark:bg-slate-800 rounded-2xl rounded-tl-md px-4 py-3">
+            <p class="text-sm leading-relaxed">YES YES YES!! *whole body wiggle* A new friend named MAX?! I bet he's the BEST boy. Is he big? Small? Does he like to wrestle? I'm very gentle with small dogs (my human trained me well). When can we meet?! Tell your human to message my human!</p>
+          </div>
+          <div class="mt-2 bg-white dark:bg-slate-700 border border-slate-200 dark:border-slate-600 rounded-xl p-3">
+            <p class="text-xs font-medium text-slate-700 dark:text-slate-300 mb-2">Set up a playdate?</p>
+            <div class="flex gap-2">
+              <button class="flex-1 px-3 py-2 rounded-lg bg-brand-600 text-white text-xs font-semibold hover:bg-brand-700 transition">Request Playdate</button>
+              <button class="flex-1 px-3 py-2 rounded-lg border border-slate-200 dark:border-slate-600 text-xs font-medium hover:bg-slate-50 dark:hover:bg-slate-800 transition">Maybe Later</button>
+            </div>
+          </div>
+          <p class="text-[10px] text-slate-400 mt-1 ml-1">2:36 PM</p>
+        </div>
+      </div>
+
+      <!-- Typing indicator -->
+      <div class="flex gap-2.5 max-w-[85%]">
+        <div class="w-8 h-8 rounded-full bg-gradient-to-br from-amber-300 to-orange-400 flex items-center justify-center text-sm shrink-0 mt-1">&#x1F436;</div>
+        <div class="bg-slate-100 dark:bg-slate-800 rounded-2xl rounded-tl-md px-4 py-3">
+          <div class="flex gap-1 items-center h-5">
+            <div class="typing-dot w-2 h-2 rounded-full bg-slate-400"></div>
+            <div class="typing-dot w-2 h-2 rounded-full bg-slate-400"></div>
+            <div class="typing-dot w-2 h-2 rounded-full bg-slate-400"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Suggested Prompts -->
+    <div class="px-4 pb-2">
+      <div class="flex gap-2 overflow-x-auto pb-2 scrollbar-hide">
+        <button class="shrink-0 px-3 py-1.5 rounded-full border border-slate-200 dark:border-slate-700 text-xs font-medium hover:border-brand-400 hover:text-brand-600 transition">What's your favorite toy?</button>
+        <button class="shrink-0 px-3 py-1.5 rounded-full border border-slate-200 dark:border-slate-700 text-xs font-medium hover:border-brand-400 hover:text-brand-600 transition">Tell me about your day</button>
+        <button class="shrink-0 px-3 py-1.5 rounded-full border border-slate-200 dark:border-slate-700 text-xs font-medium hover:border-brand-400 hover:text-brand-600 transition">Do you know any tricks?</button>
+        <button class="shrink-0 px-3 py-1.5 rounded-full border border-slate-200 dark:border-slate-700 text-xs font-medium hover:border-brand-400 hover:text-brand-600 transition">How do you feel about baths?</button>
+      </div>
+    </div>
+
+    <!-- Message Input -->
+    <div class="sticky bottom-0 bg-white dark:bg-slate-900 border-t border-slate-200 dark:border-slate-800 px-4 py-3">
+      <div class="flex items-end gap-2">
+        <div class="flex-1 bg-slate-100 dark:bg-slate-800 rounded-2xl px-4 py-2.5 flex items-end gap-2">
+          <textarea rows="1" placeholder="Talk to Luna..." class="flex-1 bg-transparent text-sm resize-none outline-none placeholder-slate-400 max-h-32"></textarea>
+          <button class="p-1 text-slate-400 hover:text-slate-600 transition" title="Send image">
+            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"/></svg>
+          </button>
+        </div>
+        <button class="p-3 rounded-full bg-brand-600 text-white hover:bg-brand-700 transition shrink-0">
+          <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8"/></svg>
+        </button>
+      </div>
+    </div>
+  </div>
+
+</body>
+</html>

@@ -1,0 +1,301 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Commune — Moderation Dashboard</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+  <script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {
+          fontFamily: { sans: ['Inter', 'system-ui', 'sans-serif'] },
+          colors: {
+            brand: {
+              50: '#eff6ff', 100: '#dbeafe', 200: '#bfdbfe', 300: '#93c5fd',
+              400: '#60a5fa', 500: '#3b82f6', 600: '#2563eb', 700: '#1d4ed8',
+              800: '#1e40af', 900: '#1e3a8a'
+            }
+          }
+        }
+      }
+    }
+  </script>
+  <style>body { font-family: 'Inter', system-ui, sans-serif; }</style>
+</head>
+<body class="bg-slate-50 dark:bg-slate-950 text-slate-900 dark:text-slate-100 antialiased">
+
+  <div class="min-h-screen">
+    <!-- Admin Header -->
+    <header class="sticky top-0 z-20 bg-white/80 dark:bg-slate-900/80 backdrop-blur-xl border-b border-slate-200 dark:border-slate-800">
+      <div class="max-w-6xl mx-auto px-4 sm:px-6 h-14 flex items-center justify-between">
+        <div class="flex items-center gap-3">
+          <a href="feed.html" class="p-1 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-lg transition">
+            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"/></svg>
+          </a>
+          <h1 class="font-bold text-base">Moderation Dashboard</h1>
+          <span class="px-2 py-0.5 rounded-md bg-red-100 dark:bg-red-900/30 text-red-700 dark:text-red-300 text-xs font-semibold">Admin</span>
+        </div>
+        <button onclick="document.documentElement.classList.toggle('dark')" class="p-2 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-lg transition">
+          <svg class="w-5 h-5 dark:hidden text-slate-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z"/></svg>
+          <svg class="w-5 h-5 hidden dark:block text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z"/></svg>
+        </button>
+      </div>
+    </header>
+
+    <div class="max-w-6xl mx-auto px-4 sm:px-6 py-6">
+      <!-- Stats Row -->
+      <div class="grid grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
+        <div class="bg-white dark:bg-slate-900 rounded-xl border border-slate-200 dark:border-slate-800 p-4">
+          <p class="text-xs text-slate-500 mb-1">Open Reports</p>
+          <p class="text-2xl font-bold text-red-600 dark:text-red-400">12</p>
+          <p class="text-xs text-red-500 mt-1">+3 today</p>
+        </div>
+        <div class="bg-white dark:bg-slate-900 rounded-xl border border-slate-200 dark:border-slate-800 p-4">
+          <p class="text-xs text-slate-500 mb-1">Resolved Today</p>
+          <p class="text-2xl font-bold text-green-600 dark:text-green-400">8</p>
+          <p class="text-xs text-green-500 mt-1">Avg 2.3h resolution</p>
+        </div>
+        <div class="bg-white dark:bg-slate-900 rounded-xl border border-slate-200 dark:border-slate-800 p-4">
+          <p class="text-xs text-slate-500 mb-1">Active Suspensions</p>
+          <p class="text-2xl font-bold">3</p>
+          <p class="text-xs text-slate-400 mt-1">1 expires tomorrow</p>
+        </div>
+        <div class="bg-white dark:bg-slate-900 rounded-xl border border-slate-200 dark:border-slate-800 p-4">
+          <p class="text-xs text-slate-500 mb-1">Spam Caught (24h)</p>
+          <p class="text-2xl font-bold">47</p>
+          <p class="text-xs text-slate-400 mt-1">Auto-filtered</p>
+        </div>
+      </div>
+
+      <!-- Tabs -->
+      <div class="border-b border-slate-200 dark:border-slate-800 flex gap-6 mb-6">
+        <button class="pb-3 text-sm font-semibold text-brand-600 dark:text-brand-400 border-b-2 border-brand-600 dark:border-brand-400">Report Queue</button>
+        <button class="pb-3 text-sm text-slate-500 hover:text-slate-700 dark:hover:text-slate-300 transition">User Actions</button>
+        <button class="pb-3 text-sm text-slate-500 hover:text-slate-700 dark:hover:text-slate-300 transition">Audit Log</button>
+        <button class="pb-3 text-sm text-slate-500 hover:text-slate-700 dark:hover:text-slate-300 transition">Appeals</button>
+      </div>
+
+      <!-- Filters -->
+      <div class="flex flex-wrap items-center gap-3 mb-6">
+        <div class="flex items-center gap-2 bg-white dark:bg-slate-900 rounded-lg border border-slate-200 dark:border-slate-700 px-3 py-2">
+          <label class="text-xs text-slate-500">Type:</label>
+          <select class="text-sm bg-transparent border-0 focus:outline-none font-medium cursor-pointer pr-6">
+            <option>All</option>
+            <option>Posts</option>
+            <option>Comments</option>
+            <option>Profiles</option>
+          </select>
+        </div>
+        <div class="flex items-center gap-2 bg-white dark:bg-slate-900 rounded-lg border border-slate-200 dark:border-slate-700 px-3 py-2">
+          <label class="text-xs text-slate-500">Reason:</label>
+          <select class="text-sm bg-transparent border-0 focus:outline-none font-medium cursor-pointer pr-6">
+            <option>All</option>
+            <option>Spam</option>
+            <option>Harassment</option>
+            <option>Hate Speech</option>
+            <option>NSFW</option>
+            <option>Misinformation</option>
+          </select>
+        </div>
+        <div class="flex items-center gap-2 bg-white dark:bg-slate-900 rounded-lg border border-slate-200 dark:border-slate-700 px-3 py-2">
+          <label class="text-xs text-slate-500">Priority:</label>
+          <select class="text-sm bg-transparent border-0 focus:outline-none font-medium cursor-pointer pr-6">
+            <option>All</option>
+            <option>High</option>
+            <option>Medium</option>
+            <option>Low</option>
+          </select>
+        </div>
+      </div>
+
+      <!-- Report Queue -->
+      <div class="space-y-4">
+
+        <!-- Report 1 — High Priority -->
+        <div class="bg-white dark:bg-slate-900 rounded-xl border border-slate-200 dark:border-slate-800 overflow-hidden">
+          <div class="flex items-center gap-3 px-5 py-3 bg-red-50 dark:bg-red-900/10 border-b border-red-100 dark:border-red-900/20">
+            <span class="w-2 h-2 rounded-full bg-red-500"></span>
+            <span class="text-xs font-semibold text-red-700 dark:text-red-400">HIGH PRIORITY</span>
+            <span class="text-xs text-slate-500 ml-auto">Reported 23 min ago</span>
+          </div>
+          <div class="p-5">
+            <div class="flex items-start gap-4">
+              <div class="flex-1">
+                <div class="flex items-center gap-2 mb-2">
+                  <span class="px-2 py-0.5 rounded-md bg-slate-100 dark:bg-slate-800 text-xs font-medium">Post</span>
+                  <span class="px-2 py-0.5 rounded-md bg-red-100 dark:bg-red-900/30 text-red-700 dark:text-red-300 text-xs font-medium">Harassment</span>
+                  <span class="text-xs text-slate-500">3 reports</span>
+                </div>
+                <!-- Reported Content -->
+                <div class="bg-slate-50 dark:bg-slate-800/50 rounded-lg p-4 mb-3 border border-slate-100 dark:border-slate-700">
+                  <div class="flex items-center gap-2 mb-2">
+                    <div class="w-6 h-6 rounded-full bg-gradient-to-br from-red-400 to-orange-500"></div>
+                    <span class="text-sm font-medium">@toxicuser99</span>
+                  </div>
+                  <p class="text-sm text-slate-600 dark:text-slate-400 italic">"[Content hidden - contains targeted harassment directed at @sarahc regarding her appearance and personal life. Multiple slurs detected.]"</p>
+                </div>
+                <p class="text-xs text-slate-500 mb-3">
+                  <span class="font-medium">Reported by:</span> @sarahc, @jamesk, @elenav
+                  <span class="mx-2">|</span>
+                  <span class="font-medium">Auto-flag:</span> Profanity filter triggered
+                </p>
+              </div>
+            </div>
+            <!-- Actions -->
+            <div class="flex items-center gap-2 pt-3 border-t border-slate-100 dark:border-slate-800">
+              <button class="px-4 py-2 rounded-lg bg-red-600 text-white text-xs font-semibold hover:bg-red-700 transition">Remove Content</button>
+              <button class="px-4 py-2 rounded-lg bg-amber-500 text-white text-xs font-semibold hover:bg-amber-600 transition">Warn User</button>
+              <button class="px-4 py-2 rounded-lg bg-red-800 text-white text-xs font-semibold hover:bg-red-900 transition">Suspend User</button>
+              <button class="px-4 py-2 rounded-lg border border-slate-200 dark:border-slate-700 text-xs font-medium hover:bg-slate-50 dark:hover:bg-slate-800 transition ml-auto">Dismiss</button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Report 2 — Medium Priority -->
+        <div class="bg-white dark:bg-slate-900 rounded-xl border border-slate-200 dark:border-slate-800 overflow-hidden">
+          <div class="flex items-center gap-3 px-5 py-3 bg-amber-50 dark:bg-amber-900/10 border-b border-amber-100 dark:border-amber-900/20">
+            <span class="w-2 h-2 rounded-full bg-amber-500"></span>
+            <span class="text-xs font-semibold text-amber-700 dark:text-amber-400">MEDIUM PRIORITY</span>
+            <span class="text-xs text-slate-500 ml-auto">Reported 1h ago</span>
+          </div>
+          <div class="p-5">
+            <div class="flex items-start gap-4">
+              <div class="flex-1">
+                <div class="flex items-center gap-2 mb-2">
+                  <span class="px-2 py-0.5 rounded-md bg-slate-100 dark:bg-slate-800 text-xs font-medium">Post</span>
+                  <span class="px-2 py-0.5 rounded-md bg-amber-100 dark:bg-amber-900/30 text-amber-700 dark:text-amber-300 text-xs font-medium">Spam</span>
+                  <span class="text-xs text-slate-500">1 report</span>
+                </div>
+                <div class="bg-slate-50 dark:bg-slate-800/50 rounded-lg p-4 mb-3 border border-slate-100 dark:border-slate-700">
+                  <div class="flex items-center gap-2 mb-2">
+                    <div class="w-6 h-6 rounded-full bg-gradient-to-br from-gray-400 to-gray-500"></div>
+                    <span class="text-sm font-medium">@cryptogains2026</span>
+                  </div>
+                  <p class="text-sm text-slate-600 dark:text-slate-400">"Want to earn $10k/day with crypto? Click this link to get started NOW! Limited spots available!! [link removed]"</p>
+                </div>
+                <p class="text-xs text-slate-500 mb-3">
+                  <span class="font-medium">Reported by:</span> @marcusj
+                  <span class="mx-2">|</span>
+                  <span class="font-medium">Auto-flag:</span> Spam pattern detected (promotional link + financial claims)
+                </p>
+              </div>
+            </div>
+            <div class="flex items-center gap-2 pt-3 border-t border-slate-100 dark:border-slate-800">
+              <button class="px-4 py-2 rounded-lg bg-red-600 text-white text-xs font-semibold hover:bg-red-700 transition">Remove + Ban</button>
+              <button class="px-4 py-2 rounded-lg bg-red-600 text-white text-xs font-semibold hover:bg-red-700 transition">Remove Content</button>
+              <button class="px-4 py-2 rounded-lg border border-slate-200 dark:border-slate-700 text-xs font-medium hover:bg-slate-50 dark:hover:bg-slate-800 transition ml-auto">Dismiss</button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Report 3 — Low Priority -->
+        <div class="bg-white dark:bg-slate-900 rounded-xl border border-slate-200 dark:border-slate-800 overflow-hidden">
+          <div class="flex items-center gap-3 px-5 py-3 bg-slate-50 dark:bg-slate-800/50 border-b border-slate-100 dark:border-slate-700">
+            <span class="w-2 h-2 rounded-full bg-slate-400"></span>
+            <span class="text-xs font-semibold text-slate-600 dark:text-slate-400">LOW PRIORITY</span>
+            <span class="text-xs text-slate-500 ml-auto">Reported 3h ago</span>
+          </div>
+          <div class="p-5">
+            <div class="flex items-start gap-4">
+              <div class="flex-1">
+                <div class="flex items-center gap-2 mb-2">
+                  <span class="px-2 py-0.5 rounded-md bg-slate-100 dark:bg-slate-800 text-xs font-medium">Comment</span>
+                  <span class="px-2 py-0.5 rounded-md bg-blue-100 dark:bg-blue-900/30 text-blue-700 dark:text-blue-300 text-xs font-medium">Misinformation</span>
+                  <span class="text-xs text-slate-500">1 report</span>
+                </div>
+                <div class="bg-slate-50 dark:bg-slate-800/50 rounded-lg p-4 mb-3 border border-slate-100 dark:border-slate-700">
+                  <div class="flex items-center gap-2 mb-2">
+                    <div class="w-6 h-6 rounded-full bg-gradient-to-br from-blue-400 to-blue-500"></div>
+                    <span class="text-sm font-medium">@wellmeaning42</span>
+                  </div>
+                  <p class="text-sm text-slate-600 dark:text-slate-400">"Actually, I read somewhere that this technology uses quantum entanglement to transfer data faster than light, which is why it's so revolutionary."</p>
+                </div>
+                <p class="text-xs text-slate-500 mb-3">
+                  <span class="font-medium">Reported by:</span> @aishap
+                  <span class="mx-2">|</span>
+                  <span class="font-medium">Auto-flag:</span> None
+                </p>
+              </div>
+            </div>
+            <div class="flex items-center gap-2 pt-3 border-t border-slate-100 dark:border-slate-800">
+              <button class="px-4 py-2 rounded-lg bg-amber-500 text-white text-xs font-semibold hover:bg-amber-600 transition">Add Label</button>
+              <button class="px-4 py-2 rounded-lg bg-red-600 text-white text-xs font-semibold hover:bg-red-700 transition">Remove Content</button>
+              <button class="px-4 py-2 rounded-lg border border-slate-200 dark:border-slate-700 text-xs font-medium hover:bg-slate-50 dark:hover:bg-slate-800 transition ml-auto">Dismiss</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Report Dialog (overlay -- triggered from posts via "Report" button) -->
+  <div id="report-dialog" class="fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-sm" style="display: none;">
+    <div class="bg-white dark:bg-slate-900 rounded-2xl w-full max-w-md mx-4 shadow-2xl border border-slate-200 dark:border-slate-700">
+      <div class="flex items-center justify-between p-5 border-b border-slate-200 dark:border-slate-800">
+        <h2 class="font-bold text-base">Report Content</h2>
+        <button onclick="document.getElementById('report-dialog').style.display='none'" class="p-1 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-lg transition">
+          <svg class="w-5 h-5 text-slate-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>
+        </button>
+      </div>
+      <div class="p-5">
+        <p class="text-sm text-slate-600 dark:text-slate-400 mb-4">Why are you reporting this content?</p>
+        <div class="space-y-2">
+          <label class="flex items-center gap-3 p-3 rounded-xl border border-slate-200 dark:border-slate-700 hover:border-brand-300 dark:hover:border-brand-600 cursor-pointer transition">
+            <input type="radio" name="report-reason" class="w-4 h-4 text-brand-600 border-slate-300">
+            <div>
+              <p class="text-sm font-medium">Spam</p>
+              <p class="text-xs text-slate-500">Misleading, fake engagement, or repetitive content</p>
+            </div>
+          </label>
+          <label class="flex items-center gap-3 p-3 rounded-xl border border-slate-200 dark:border-slate-700 hover:border-brand-300 dark:hover:border-brand-600 cursor-pointer transition">
+            <input type="radio" name="report-reason" class="w-4 h-4 text-brand-600 border-slate-300">
+            <div>
+              <p class="text-sm font-medium">Harassment or bullying</p>
+              <p class="text-xs text-slate-500">Targeted attacks, threats, or intimidation</p>
+            </div>
+          </label>
+          <label class="flex items-center gap-3 p-3 rounded-xl border border-slate-200 dark:border-slate-700 hover:border-brand-300 dark:hover:border-brand-600 cursor-pointer transition">
+            <input type="radio" name="report-reason" class="w-4 h-4 text-brand-600 border-slate-300">
+            <div>
+              <p class="text-sm font-medium">Hate speech</p>
+              <p class="text-xs text-slate-500">Slurs, dehumanizing language, or discrimination</p>
+            </div>
+          </label>
+          <label class="flex items-center gap-3 p-3 rounded-xl border border-slate-200 dark:border-slate-700 hover:border-brand-300 dark:hover:border-brand-600 cursor-pointer transition">
+            <input type="radio" name="report-reason" class="w-4 h-4 text-brand-600 border-slate-300">
+            <div>
+              <p class="text-sm font-medium">NSFW / Inappropriate</p>
+              <p class="text-xs text-slate-500">Sexual, violent, or graphic content</p>
+            </div>
+          </label>
+          <label class="flex items-center gap-3 p-3 rounded-xl border border-slate-200 dark:border-slate-700 hover:border-brand-300 dark:hover:border-brand-600 cursor-pointer transition">
+            <input type="radio" name="report-reason" class="w-4 h-4 text-brand-600 border-slate-300">
+            <div>
+              <p class="text-sm font-medium">Misinformation</p>
+              <p class="text-xs text-slate-500">False or misleading claims presented as fact</p>
+            </div>
+          </label>
+        </div>
+        <div class="mt-4">
+          <label class="block text-sm font-medium mb-1.5">Additional details (optional)</label>
+          <textarea rows="2" placeholder="Provide more context..." class="w-full px-4 py-2.5 rounded-xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 text-sm focus:outline-none focus:border-brand-500 transition resize-none placeholder:text-slate-400"></textarea>
+        </div>
+      </div>
+      <div class="px-5 py-4 bg-slate-50 dark:bg-slate-800/50 rounded-b-2xl flex items-center justify-end gap-3">
+        <button onclick="document.getElementById('report-dialog').style.display='none'" class="px-4 py-2 rounded-xl text-sm font-medium text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800 transition">Cancel</button>
+        <button class="px-6 py-2 rounded-xl bg-red-600 text-white text-sm font-semibold hover:bg-red-700 transition">Submit Report</button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // Show report dialog demo
+    // In production, this would be triggered from a post's "..." menu
+    // document.getElementById('report-dialog').style.display = 'flex';
+  </script>
+
+</body>
+</html>

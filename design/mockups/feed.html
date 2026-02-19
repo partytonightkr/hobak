@@ -1,0 +1,476 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Commune — Feed</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+  <script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {
+          fontFamily: { sans: ['Inter', 'system-ui', 'sans-serif'] },
+          colors: {
+            brand: {
+              50: '#eff6ff', 100: '#dbeafe', 200: '#bfdbfe', 300: '#93c5fd',
+              400: '#60a5fa', 500: '#3b82f6', 600: '#2563eb', 700: '#1d4ed8',
+              800: '#1e40af', 900: '#1e3a8a'
+            }
+          }
+        }
+      }
+    }
+  </script>
+  <style>
+    body { font-family: 'Inter', system-ui, sans-serif; }
+    .scrollbar-hide::-webkit-scrollbar { display: none; }
+    .scrollbar-hide { -ms-overflow-style: none; scrollbar-width: none; }
+    .like-btn.active svg { fill: #ef4444; color: #ef4444; }
+    .bookmark-btn.active svg { fill: #2563eb; color: #2563eb; }
+  </style>
+</head>
+<body class="bg-slate-50 dark:bg-slate-950 text-slate-900 dark:text-slate-100 antialiased">
+
+  <div class="min-h-screen flex">
+    <!-- Sidebar (desktop) -->
+    <aside class="hidden lg:flex flex-col w-64 border-r border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 fixed h-full z-30">
+      <!-- Logo -->
+      <div class="p-6 pb-4">
+        <div class="flex items-center gap-2">
+          <div class="w-8 h-8 rounded-lg bg-gradient-to-br from-brand-500 to-purple-500 flex items-center justify-center">
+            <svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"/></svg>
+          </div>
+          <span class="text-lg font-bold">Commune</span>
+        </div>
+      </div>
+
+      <!-- Nav Links -->
+      <nav class="flex-1 px-3 space-y-1">
+        <a href="feed.html" class="flex items-center gap-3 px-3 py-2.5 rounded-xl bg-brand-50 dark:bg-brand-900/20 text-brand-600 dark:text-brand-400 font-medium text-sm">
+          <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"/></svg>
+          Home
+        </a>
+        <a href="#" class="flex items-center gap-3 px-3 py-2.5 rounded-xl text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800 transition text-sm">
+          <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/></svg>
+          Explore
+        </a>
+        <a href="#" class="flex items-center gap-3 px-3 py-2.5 rounded-xl text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800 transition text-sm relative">
+          <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9"/></svg>
+          Notifications
+          <span class="absolute left-7 top-1.5 w-4 h-4 bg-red-500 text-white text-[10px] font-bold rounded-full flex items-center justify-center">3</span>
+        </a>
+        <a href="#" class="flex items-center gap-3 px-3 py-2.5 rounded-xl text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800 transition text-sm">
+          <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 5a2 2 0 012-2h10a2 2 0 012 2v16l-7-3.5L5 21V5z"/></svg>
+          Bookmarks
+        </a>
+        <a href="profile.html" class="flex items-center gap-3 px-3 py-2.5 rounded-xl text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800 transition text-sm">
+          <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"/></svg>
+          Profile
+        </a>
+        <a href="settings.html" class="flex items-center gap-3 px-3 py-2.5 rounded-xl text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800 transition text-sm">
+          <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.066 2.573c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.573 1.066c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.066-2.573c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/></svg>
+          Settings
+        </a>
+      </nav>
+
+      <!-- Post Button -->
+      <div class="px-3 mb-4">
+        <button onclick="document.getElementById('compose-modal').classList.remove('hidden')" class="w-full py-3 rounded-xl bg-brand-600 text-white font-semibold hover:bg-brand-700 transition shadow-lg shadow-brand-500/25 text-sm">
+          New Post
+        </button>
+      </div>
+
+      <!-- User -->
+      <div class="border-t border-slate-200 dark:border-slate-800 p-4">
+        <div class="flex items-center gap-3">
+          <div class="w-10 h-10 rounded-full bg-gradient-to-br from-brand-400 to-brand-600 flex items-center justify-center text-white font-semibold text-sm">JD</div>
+          <div class="flex-1 min-w-0">
+            <p class="text-sm font-semibold truncate">Jane Doe</p>
+            <p class="text-xs text-slate-500 truncate">@janedoe</p>
+          </div>
+          <button class="p-1 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-lg transition">
+            <svg class="w-5 h-5 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 12h.01M12 12h.01M19 12h.01"/></svg>
+          </button>
+        </div>
+      </div>
+    </aside>
+
+    <!-- Main Content -->
+    <main class="flex-1 lg:ml-64">
+      <!-- Top Bar (mobile) -->
+      <header class="lg:hidden sticky top-0 z-20 bg-white/80 dark:bg-slate-900/80 backdrop-blur-xl border-b border-slate-200 dark:border-slate-800">
+        <div class="flex items-center justify-between px-4 h-14">
+          <div class="w-8 h-8 rounded-full bg-gradient-to-br from-brand-400 to-brand-600 flex items-center justify-center text-white font-semibold text-xs">JD</div>
+          <div class="flex items-center gap-2">
+            <div class="w-7 h-7 rounded-lg bg-gradient-to-br from-brand-500 to-purple-500 flex items-center justify-center">
+              <svg class="w-4 h-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"/></svg>
+            </div>
+            <span class="font-bold text-sm">Commune</span>
+          </div>
+          <button onclick="document.documentElement.classList.toggle('dark')" class="p-2">
+            <svg class="w-5 h-5 dark:hidden text-slate-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z"/></svg>
+            <svg class="w-5 h-5 hidden dark:block text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z"/></svg>
+          </button>
+        </div>
+      </header>
+
+      <div class="max-w-2xl mx-auto">
+        <!-- Feed Header -->
+        <div class="sticky top-0 lg:top-0 z-10 bg-white/80 dark:bg-slate-900/80 backdrop-blur-xl border-b border-slate-200 dark:border-slate-800">
+          <div class="flex">
+            <button class="flex-1 py-4 text-sm font-semibold text-brand-600 dark:text-brand-400 border-b-2 border-brand-600 dark:border-brand-400">
+              For You
+            </button>
+            <button class="flex-1 py-4 text-sm font-medium text-slate-500 dark:text-slate-400 hover:bg-slate-50 dark:hover:bg-slate-800/50 transition">
+              Following
+            </button>
+          </div>
+        </div>
+
+        <!-- Compose (desktop) -->
+        <div class="hidden sm:block bg-white dark:bg-slate-900 border-b border-slate-200 dark:border-slate-800 p-4">
+          <div class="flex gap-3">
+            <div class="w-10 h-10 rounded-full bg-gradient-to-br from-brand-400 to-brand-600 shrink-0 flex items-center justify-center text-white font-semibold text-sm">JD</div>
+            <div class="flex-1">
+              <textarea placeholder="What's on your mind?" class="w-full resize-none border-0 bg-transparent text-base placeholder:text-slate-400 focus:outline-none min-h-[60px] dark:text-slate-100"></textarea>
+              <div class="flex items-center justify-between pt-3 border-t border-slate-100 dark:border-slate-800">
+                <div class="flex items-center gap-1">
+                  <button class="p-2 rounded-lg hover:bg-brand-50 dark:hover:bg-brand-900/20 text-brand-500 transition">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"/></svg>
+                  </button>
+                  <button class="p-2 rounded-lg hover:bg-brand-50 dark:hover:bg-brand-900/20 text-brand-500 transition">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14.828 14.828a4 4 0 01-5.656 0M9 10h.01M15 10h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+                  </button>
+                  <button class="p-2 rounded-lg hover:bg-brand-50 dark:hover:bg-brand-900/20 text-brand-500 transition">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13.828 10.172a4 4 0 00-5.656 0l-4 4a4 4 0 105.656 5.656l1.102-1.101m-.758-4.899a4 4 0 005.656 0l4-4a4 4 0 00-5.656-5.656l-1.1 1.1"/></svg>
+                  </button>
+                </div>
+                <button class="px-5 py-2 rounded-full bg-brand-600 text-white text-sm font-semibold hover:bg-brand-700 transition">
+                  Post
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Feed Posts -->
+        <div class="divide-y divide-slate-200 dark:divide-slate-800">
+
+          <!-- Post 1 — Text + Image -->
+          <article class="bg-white dark:bg-slate-900 p-4 hover:bg-slate-50 dark:hover:bg-slate-800/50 transition cursor-pointer">
+            <div class="flex gap-3">
+              <div class="w-10 h-10 rounded-full bg-gradient-to-br from-pink-400 to-rose-500 shrink-0"></div>
+              <div class="flex-1 min-w-0">
+                <div class="flex items-center gap-2 mb-1">
+                  <span class="font-semibold text-sm truncate">Sarah Chen</span>
+                  <svg class="w-4 h-4 text-brand-500 shrink-0" fill="currentColor" viewBox="0 0 24 24"><path d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+                  <span class="text-xs text-slate-500 truncate">@sarahc</span>
+                  <span class="text-xs text-slate-400">·</span>
+                  <span class="text-xs text-slate-500">2h</span>
+                </div>
+                <p class="text-sm leading-relaxed mb-3">Just shipped the new dashboard for our open-source project! The community feedback has been incredible. This is what building in public is all about. <span class="text-brand-500">#opensource</span> <span class="text-brand-500">#buildinpublic</span></p>
+                <!-- Image -->
+                <div class="rounded-2xl overflow-hidden border border-slate-200 dark:border-slate-700 mb-3">
+                  <div class="bg-gradient-to-br from-brand-100 to-purple-100 dark:from-brand-900/30 dark:to-purple-900/30 h-56 flex items-center justify-center">
+                    <div class="text-center">
+                      <svg class="w-12 h-12 text-brand-400 mx-auto mb-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9.75 17L9 20l-1 1h8l-1-1-.75-3M3 13h18M5 17h14a2 2 0 002-2V5a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/></svg>
+                      <p class="text-xs text-brand-500 font-medium">Dashboard Preview</p>
+                    </div>
+                  </div>
+                </div>
+                <!-- Actions -->
+                <div class="flex items-center gap-8 text-slate-500">
+                  <button class="flex items-center gap-1.5 text-xs hover:text-brand-500 transition group">
+                    <svg class="w-4 h-4 group-hover:scale-110 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"/></svg>
+                    42
+                  </button>
+                  <button class="flex items-center gap-1.5 text-xs hover:text-green-500 transition group">
+                    <svg class="w-4 h-4 group-hover:scale-110 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"/></svg>
+                    18
+                  </button>
+                  <button onclick="this.classList.toggle('active')" class="like-btn flex items-center gap-1.5 text-xs hover:text-red-500 transition group">
+                    <svg class="w-4 h-4 group-hover:scale-110 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"/></svg>
+                    247
+                  </button>
+                  <button onclick="this.classList.toggle('active')" class="bookmark-btn flex items-center gap-1.5 text-xs hover:text-brand-500 transition group">
+                    <svg class="w-4 h-4 group-hover:scale-110 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 5a2 2 0 012-2h10a2 2 0 012 2v16l-7-3.5L5 21V5z"/></svg>
+                  </button>
+                  <button class="flex items-center gap-1.5 text-xs hover:text-brand-500 transition group ml-auto">
+                    <svg class="w-4 h-4 group-hover:scale-110 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-8l-4-4m0 0L8 8m4-4v12"/></svg>
+                  </button>
+                </div>
+              </div>
+            </div>
+          </article>
+
+          <!-- Post 2 — Text only -->
+          <article class="bg-white dark:bg-slate-900 p-4 hover:bg-slate-50 dark:hover:bg-slate-800/50 transition cursor-pointer">
+            <div class="flex gap-3">
+              <div class="w-10 h-10 rounded-full bg-gradient-to-br from-emerald-400 to-teal-500 shrink-0"></div>
+              <div class="flex-1 min-w-0">
+                <div class="flex items-center gap-2 mb-1">
+                  <span class="font-semibold text-sm">Marcus Johnson</span>
+                  <span class="text-xs text-slate-500">@marcusj</span>
+                  <span class="text-xs text-slate-400">·</span>
+                  <span class="text-xs text-slate-500">4h</span>
+                </div>
+                <p class="text-sm leading-relaxed mb-3">Hot take: the best code is the code you don't write. Every line of code is a liability. Simplify ruthlessly. Your future self will thank you.</p>
+                <div class="flex items-center gap-8 text-slate-500">
+                  <button class="flex items-center gap-1.5 text-xs hover:text-brand-500 transition">
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"/></svg>
+                    156
+                  </button>
+                  <button class="flex items-center gap-1.5 text-xs hover:text-green-500 transition">
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"/></svg>
+                    89
+                  </button>
+                  <button class="like-btn flex items-center gap-1.5 text-xs hover:text-red-500 transition">
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"/></svg>
+                    1.2K
+                  </button>
+                  <button class="bookmark-btn flex items-center gap-1.5 text-xs hover:text-brand-500 transition">
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 5a2 2 0 012-2h10a2 2 0 012 2v16l-7-3.5L5 21V5z"/></svg>
+                  </button>
+                  <button class="flex items-center gap-1.5 text-xs hover:text-brand-500 transition ml-auto">
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-8l-4-4m0 0L8 8m4-4v12"/></svg>
+                  </button>
+                </div>
+              </div>
+            </div>
+          </article>
+
+          <!-- Post 3 — Link Preview -->
+          <article class="bg-white dark:bg-slate-900 p-4 hover:bg-slate-50 dark:hover:bg-slate-800/50 transition cursor-pointer">
+            <div class="flex gap-3">
+              <div class="w-10 h-10 rounded-full bg-gradient-to-br from-amber-400 to-orange-500 shrink-0"></div>
+              <div class="flex-1 min-w-0">
+                <div class="flex items-center gap-2 mb-1">
+                  <span class="font-semibold text-sm">Aisha Patel</span>
+                  <svg class="w-4 h-4 text-brand-500 shrink-0" fill="currentColor" viewBox="0 0 24 24"><path d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+                  <span class="text-xs text-slate-500">@aishap</span>
+                  <span class="text-xs text-slate-400">·</span>
+                  <span class="text-xs text-slate-500">6h</span>
+                </div>
+                <p class="text-sm leading-relaxed mb-3">This article perfectly captures why I left traditional social media. We need platforms that respect our time and attention. <span class="text-brand-500">#digital_wellbeing</span></p>
+                <!-- Link Preview -->
+                <div class="rounded-2xl border border-slate-200 dark:border-slate-700 overflow-hidden mb-3">
+                  <div class="bg-slate-100 dark:bg-slate-800 h-32 flex items-center justify-center">
+                    <svg class="w-10 h-10 text-slate-300 dark:text-slate-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M13.828 10.172a4 4 0 00-5.656 0l-4 4a4 4 0 105.656 5.656l1.102-1.101m-.758-4.899a4 4 0 005.656 0l4-4a4 4 0 00-5.656-5.656l-1.1 1.1"/></svg>
+                  </div>
+                  <div class="p-3">
+                    <p class="text-xs text-slate-500 mb-1">medium.com</p>
+                    <p class="text-sm font-semibold mb-1">The Attention Economy Is Broken — Here's How We Fix It</p>
+                    <p class="text-xs text-slate-500 line-clamp-2">A deep dive into how social platforms can prioritize user wellbeing while maintaining engagement...</p>
+                  </div>
+                </div>
+                <div class="flex items-center gap-8 text-slate-500">
+                  <button class="flex items-center gap-1.5 text-xs hover:text-brand-500 transition">
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"/></svg>
+                    28
+                  </button>
+                  <button class="flex items-center gap-1.5 text-xs hover:text-green-500 transition">
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"/></svg>
+                    64
+                  </button>
+                  <button class="like-btn flex items-center gap-1.5 text-xs hover:text-red-500 transition">
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"/></svg>
+                    512
+                  </button>
+                  <button class="bookmark-btn flex items-center gap-1.5 text-xs hover:text-brand-500 transition">
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 5a2 2 0 012-2h10a2 2 0 012 2v16l-7-3.5L5 21V5z"/></svg>
+                  </button>
+                  <button class="flex items-center gap-1.5 text-xs hover:text-brand-500 transition ml-auto">
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-8l-4-4m0 0L8 8m4-4v12"/></svg>
+                  </button>
+                </div>
+              </div>
+            </div>
+          </article>
+
+          <!-- Post 4 — Repost -->
+          <article class="bg-white dark:bg-slate-900 p-4 hover:bg-slate-50 dark:hover:bg-slate-800/50 transition cursor-pointer">
+            <div class="flex items-center gap-2 text-xs text-slate-500 mb-2 ml-12">
+              <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"/></svg>
+              Alex Rivera reposted
+            </div>
+            <div class="flex gap-3">
+              <div class="w-10 h-10 rounded-full bg-gradient-to-br from-violet-400 to-purple-500 shrink-0"></div>
+              <div class="flex-1 min-w-0">
+                <div class="flex items-center gap-2 mb-1">
+                  <span class="font-semibold text-sm">DevTools Weekly</span>
+                  <svg class="w-4 h-4 text-brand-500 shrink-0" fill="currentColor" viewBox="0 0 24 24"><path d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+                  <span class="text-xs text-slate-500">@devtools</span>
+                  <span class="text-xs text-slate-400">·</span>
+                  <span class="text-xs text-slate-500">8h</span>
+                </div>
+                <p class="text-sm leading-relaxed mb-3">Announcing our 2026 Developer Survey results! Key findings:<br><br>1. TypeScript adoption hit 78%<br>2. Rust is the most loved language (5th year running)<br>3. 62% of devs use AI coding assistants daily<br><br>Full report in thread below.</p>
+                <div class="flex items-center gap-8 text-slate-500">
+                  <button class="flex items-center gap-1.5 text-xs hover:text-brand-500 transition">
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"/></svg>
+                    324
+                  </button>
+                  <button class="flex items-center gap-1.5 text-xs text-green-500">
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"/></svg>
+                    1.5K
+                  </button>
+                  <button class="like-btn flex items-center gap-1.5 text-xs hover:text-red-500 transition">
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"/></svg>
+                    3.8K
+                  </button>
+                  <button class="bookmark-btn flex items-center gap-1.5 text-xs hover:text-brand-500 transition">
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 5a2 2 0 012-2h10a2 2 0 012 2v16l-7-3.5L5 21V5z"/></svg>
+                  </button>
+                  <button class="flex items-center gap-1.5 text-xs hover:text-brand-500 transition ml-auto">
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-8l-4-4m0 0L8 8m4-4v12"/></svg>
+                  </button>
+                </div>
+              </div>
+            </div>
+          </article>
+
+        </div>
+      </div>
+    </main>
+
+    <!-- Right Sidebar (desktop) -->
+    <aside class="hidden xl:block w-80 shrink-0 border-l border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 p-6 space-y-6 sticky top-0 h-screen overflow-y-auto scrollbar-hide">
+      <!-- Search -->
+      <div class="relative">
+        <svg class="w-4 h-4 absolute left-3 top-1/2 -translate-y-1/2 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/></svg>
+        <input type="text" placeholder="Search Commune" class="w-full pl-10 pr-4 py-2.5 rounded-xl bg-slate-100 dark:bg-slate-800 border-0 text-sm placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-brand-500">
+      </div>
+
+      <!-- Trending -->
+      <div class="bg-slate-50 dark:bg-slate-800/50 rounded-2xl p-4">
+        <h3 class="font-bold text-base mb-4">Trending</h3>
+        <div class="space-y-4">
+          <div>
+            <p class="text-xs text-slate-500">Technology</p>
+            <p class="font-semibold text-sm">#opensource</p>
+            <p class="text-xs text-slate-500">2,847 posts</p>
+          </div>
+          <div>
+            <p class="text-xs text-slate-500">Developer</p>
+            <p class="font-semibold text-sm">#buildinpublic</p>
+            <p class="text-xs text-slate-500">1,523 posts</p>
+          </div>
+          <div>
+            <p class="text-xs text-slate-500">AI</p>
+            <p class="font-semibold text-sm">#ai_tools</p>
+            <p class="text-xs text-slate-500">4,129 posts</p>
+          </div>
+          <a href="#" class="block text-sm text-brand-600 dark:text-brand-400 hover:underline">Show more</a>
+        </div>
+      </div>
+
+      <!-- Who to follow -->
+      <div class="bg-slate-50 dark:bg-slate-800/50 rounded-2xl p-4">
+        <h3 class="font-bold text-base mb-4">Who to follow</h3>
+        <div class="space-y-4">
+          <div class="flex items-center gap-3">
+            <div class="w-10 h-10 rounded-full bg-gradient-to-br from-blue-400 to-indigo-500 shrink-0"></div>
+            <div class="flex-1 min-w-0">
+              <p class="font-semibold text-sm truncate">James Kim</p>
+              <p class="text-xs text-slate-500 truncate">@jamesk</p>
+            </div>
+            <button class="px-4 py-1.5 rounded-full bg-slate-900 dark:bg-white text-white dark:text-slate-900 text-xs font-semibold hover:opacity-80 transition">
+              Follow
+            </button>
+          </div>
+          <div class="flex items-center gap-3">
+            <div class="w-10 h-10 rounded-full bg-gradient-to-br from-green-400 to-emerald-500 shrink-0"></div>
+            <div class="flex-1 min-w-0">
+              <p class="font-semibold text-sm truncate">Elena Vasquez</p>
+              <p class="text-xs text-slate-500 truncate">@elenav</p>
+            </div>
+            <button class="px-4 py-1.5 rounded-full bg-slate-900 dark:bg-white text-white dark:text-slate-900 text-xs font-semibold hover:opacity-80 transition">
+              Follow
+            </button>
+          </div>
+          <div class="flex items-center gap-3">
+            <div class="w-10 h-10 rounded-full bg-gradient-to-br from-amber-400 to-orange-500 shrink-0"></div>
+            <div class="flex-1 min-w-0">
+              <p class="font-semibold text-sm truncate">Raj Mehta</p>
+              <p class="text-xs text-slate-500 truncate">@rajm</p>
+            </div>
+            <button class="px-4 py-1.5 rounded-full bg-slate-900 dark:bg-white text-white dark:text-slate-900 text-xs font-semibold hover:opacity-80 transition">
+              Follow
+            </button>
+          </div>
+          <a href="#" class="block text-sm text-brand-600 dark:text-brand-400 hover:underline">Show more</a>
+        </div>
+      </div>
+
+      <!-- Footer links -->
+      <div class="text-xs text-slate-400 space-x-2">
+        <a href="#" class="hover:underline">Terms</a>
+        <a href="#" class="hover:underline">Privacy</a>
+        <a href="#" class="hover:underline">Guidelines</a>
+        <span>&copy; 2026 Commune</span>
+      </div>
+    </aside>
+  </div>
+
+  <!-- Mobile Bottom Nav -->
+  <nav class="lg:hidden fixed bottom-0 w-full bg-white dark:bg-slate-900 border-t border-slate-200 dark:border-slate-800 z-30">
+    <div class="flex items-center justify-around h-14">
+      <a href="feed.html" class="flex flex-col items-center gap-0.5 text-brand-600 dark:text-brand-400">
+        <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 24 24"><path d="M3 13h1v7c0 1.103.897 2 2 2h12c1.103 0 2-.897 2-2v-7h1a1 1 0 00.707-1.707l-9-9a.999.999 0 00-1.414 0l-9 9A1 1 0 003 13zm7 7v-5h4v5h-4zm2-15.586l6 6V20h-2v-5c0-1.103-.897-2-2-2h-4c-1.103 0-2 .897-2 2v5H6v-8.586l6-6z"/></svg>
+        <span class="text-[10px] font-medium">Home</span>
+      </a>
+      <a href="#" class="flex flex-col items-center gap-0.5 text-slate-500 dark:text-slate-400">
+        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/></svg>
+        <span class="text-[10px]">Explore</span>
+      </a>
+      <button class="w-12 h-12 -mt-5 rounded-full bg-brand-600 text-white shadow-lg shadow-brand-500/40 flex items-center justify-center">
+        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/></svg>
+      </button>
+      <a href="#" class="flex flex-col items-center gap-0.5 text-slate-500 dark:text-slate-400 relative">
+        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9"/></svg>
+        <span class="absolute -top-0.5 right-1 w-2 h-2 bg-red-500 rounded-full"></span>
+        <span class="text-[10px]">Alerts</span>
+      </a>
+      <a href="profile.html" class="flex flex-col items-center gap-0.5 text-slate-500 dark:text-slate-400">
+        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"/></svg>
+        <span class="text-[10px]">Profile</span>
+      </a>
+    </div>
+  </nav>
+
+  <!-- Compose Modal -->
+  <div id="compose-modal" class="hidden fixed inset-0 z-50 flex items-start justify-center pt-20 bg-black/50 backdrop-blur-sm">
+    <div class="bg-white dark:bg-slate-900 rounded-2xl w-full max-w-lg mx-4 shadow-2xl border border-slate-200 dark:border-slate-700">
+      <div class="flex items-center justify-between p-4 border-b border-slate-200 dark:border-slate-800">
+        <button onclick="document.getElementById('compose-modal').classList.add('hidden')" class="p-1 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-lg transition">
+          <svg class="w-5 h-5 text-slate-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>
+        </button>
+        <button class="px-5 py-2 rounded-full bg-brand-600 text-white text-sm font-semibold hover:bg-brand-700 transition">
+          Post
+        </button>
+      </div>
+      <div class="p-4">
+        <div class="flex gap-3">
+          <div class="w-10 h-10 rounded-full bg-gradient-to-br from-brand-400 to-brand-600 shrink-0 flex items-center justify-center text-white font-semibold text-sm">JD</div>
+          <textarea placeholder="What's on your mind?" class="flex-1 resize-none border-0 bg-transparent text-base placeholder:text-slate-400 focus:outline-none min-h-[120px]"></textarea>
+        </div>
+      </div>
+      <div class="flex items-center gap-1 px-4 pb-4">
+        <button class="p-2 rounded-lg hover:bg-brand-50 dark:hover:bg-brand-900/20 text-brand-500 transition">
+          <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"/></svg>
+        </button>
+        <button class="p-2 rounded-lg hover:bg-brand-50 dark:hover:bg-brand-900/20 text-brand-500 transition">
+          <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14.828 14.828a4 4 0 01-5.656 0M9 10h.01M15 10h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+        </button>
+        <button class="p-2 rounded-lg hover:bg-brand-50 dark:hover:bg-brand-900/20 text-brand-500 transition">
+          <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13.828 10.172a4 4 0 00-5.656 0l-4 4a4 4 0 105.656 5.656l1.102-1.101m-.758-4.899a4 4 0 005.656 0l4-4a4 4 0 00-5.656-5.656l-1.1 1.1"/></svg>
+        </button>
+        <span class="ml-auto text-xs text-slate-400">0/2000</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="lg:hidden h-14"></div>
+</body>
+</html>

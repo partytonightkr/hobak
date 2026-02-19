@@ -1,0 +1,247 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Commune — Add Your Dog</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+  <script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {
+          fontFamily: { sans: ['Inter', 'system-ui', 'sans-serif'] },
+          colors: {
+            brand: {
+              50: '#eff6ff', 100: '#dbeafe', 200: '#bfdbfe', 300: '#93c5fd',
+              400: '#60a5fa', 500: '#3b82f6', 600: '#2563eb', 700: '#1d4ed8',
+              800: '#1e40af', 900: '#1e3a8a'
+            }
+          }
+        }
+      }
+    }
+  </script>
+  <style>
+    body { font-family: 'Inter', system-ui, sans-serif; }
+    .step-active { background-color: #2563eb; color: white; }
+    .step-done { background-color: #10b981; color: white; }
+    .step-pending { background-color: #e2e8f0; color: #94a3b8; }
+    .dark .step-pending { background-color: #334155; color: #64748b; }
+    .trait-chip { transition: all 150ms ease; }
+    .trait-chip.selected { background-color: #2563eb; color: white; border-color: #2563eb; }
+  </style>
+</head>
+<body class="bg-slate-50 dark:bg-slate-950 text-slate-900 dark:text-slate-100 antialiased min-h-screen">
+
+  <div class="min-h-screen flex flex-col">
+    <!-- Header -->
+    <header class="bg-white dark:bg-slate-900 border-b border-slate-200 dark:border-slate-800">
+      <div class="max-w-2xl mx-auto px-4 h-14 flex items-center justify-between">
+        <button class="p-1 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-lg transition">
+          <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>
+        </button>
+        <h1 class="font-bold text-sm">Add Your Dog</h1>
+        <button class="text-sm text-slate-400 hover:text-slate-600 transition">Skip</button>
+      </div>
+    </header>
+
+    <!-- Progress Steps -->
+    <div class="bg-white dark:bg-slate-900 border-b border-slate-200 dark:border-slate-800 py-4">
+      <div class="max-w-2xl mx-auto px-4">
+        <div class="flex items-center justify-between">
+          <!-- Step 1 -->
+          <div class="flex items-center gap-2">
+            <div class="w-8 h-8 rounded-full step-done flex items-center justify-center text-xs font-bold">
+              <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg>
+            </div>
+            <span class="text-xs font-medium hidden sm:block">Photos</span>
+          </div>
+          <div class="flex-1 h-0.5 mx-2 bg-emerald-500"></div>
+          <!-- Step 2 -->
+          <div class="flex items-center gap-2">
+            <div class="w-8 h-8 rounded-full step-done flex items-center justify-center text-xs font-bold">
+              <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg>
+            </div>
+            <span class="text-xs font-medium hidden sm:block">Basics</span>
+          </div>
+          <div class="flex-1 h-0.5 mx-2 bg-brand-500"></div>
+          <!-- Step 3 (Active) -->
+          <div class="flex items-center gap-2">
+            <div class="w-8 h-8 rounded-full step-active flex items-center justify-center text-xs font-bold">3</div>
+            <span class="text-xs font-semibold text-brand-600 dark:text-brand-400 hidden sm:block">Traits</span>
+          </div>
+          <div class="flex-1 h-0.5 mx-2 bg-slate-200 dark:bg-slate-700"></div>
+          <!-- Step 4 -->
+          <div class="flex items-center gap-2">
+            <div class="w-8 h-8 rounded-full step-pending flex items-center justify-center text-xs font-bold">4</div>
+            <span class="text-xs font-medium text-slate-400 hidden sm:block">Personality</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Step Content -->
+    <div class="flex-1 max-w-2xl mx-auto w-full px-4 py-8">
+
+      <!-- ==========================================
+           STEP 1: PHOTOS (completed state shown as reference)
+           ========================================== -->
+      <!--
+      <div>
+        <h2 class="text-2xl font-bold mb-2">Add photos of your dog</h2>
+        <p class="text-sm text-slate-500 mb-8">Upload at least one photo. More photos help our AI understand your dog better.</p>
+        <div class="grid grid-cols-3 gap-3">
+          <div class="aspect-square rounded-2xl border-2 border-dashed border-slate-300 dark:border-slate-600 flex flex-col items-center justify-center gap-2 cursor-pointer hover:border-brand-400 transition">
+            <svg class="w-8 h-8 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/></svg>
+            <span class="text-xs text-slate-400">Add photo</span>
+          </div>
+        </div>
+      </div>
+      -->
+
+      <!-- ==========================================
+           STEP 2: BASICS (completed state shown as reference)
+           ========================================== -->
+      <!--
+      <div>
+        <h2 class="text-2xl font-bold mb-2">Basic information</h2>
+        <div class="space-y-4">
+          <div>
+            <label class="block text-sm font-medium mb-1.5">Dog's name</label>
+            <input type="text" value="Luna" class="...">
+          </div>
+          <div class="grid grid-cols-2 gap-4">
+            <div>
+              <label class="block text-sm font-medium mb-1.5">Breed</label>
+              <input type="text" value="Golden Retriever" class="...">
+            </div>
+            <div>
+              <label class="block text-sm font-medium mb-1.5">Age</label>
+              <input type="text" value="3 years" class="...">
+            </div>
+          </div>
+          <div class="grid grid-cols-2 gap-4">
+            <div>
+              <label class="block text-sm font-medium mb-1.5">Weight</label>
+              <input type="text" value="65 lbs" class="...">
+            </div>
+            <div>
+              <label class="block text-sm font-medium mb-1.5">Gender</label>
+              <select class="..."><option>Female</option></select>
+            </div>
+          </div>
+        </div>
+      </div>
+      -->
+
+      <!-- ==========================================
+           STEP 3: TRAITS (Active)
+           ========================================== -->
+      <div>
+        <h2 class="text-2xl font-bold mb-2">What are Luna's traits?</h2>
+        <p class="text-sm text-slate-500 mb-8">Select all that apply. This helps match Luna with compatible playmates and personalize their AI personality.</p>
+
+        <!-- Energy Level -->
+        <div class="mb-6">
+          <h3 class="text-sm font-semibold mb-3 text-slate-700 dark:text-slate-300">Energy Level</h3>
+          <div class="flex flex-wrap gap-2">
+            <button class="trait-chip px-4 py-2 rounded-full border border-slate-200 dark:border-slate-700 text-sm font-medium hover:border-brand-400 transition">Couch potato</button>
+            <button class="trait-chip px-4 py-2 rounded-full border border-slate-200 dark:border-slate-700 text-sm font-medium hover:border-brand-400 transition">Moderate</button>
+            <button class="trait-chip selected px-4 py-2 rounded-full border text-sm font-medium">High energy</button>
+            <button class="trait-chip px-4 py-2 rounded-full border border-slate-200 dark:border-slate-700 text-sm font-medium hover:border-brand-400 transition">Hyperactive</button>
+          </div>
+        </div>
+
+        <!-- Size -->
+        <div class="mb-6">
+          <h3 class="text-sm font-semibold mb-3 text-slate-700 dark:text-slate-300">Size</h3>
+          <div class="flex flex-wrap gap-2">
+            <button class="trait-chip px-4 py-2 rounded-full border border-slate-200 dark:border-slate-700 text-sm font-medium hover:border-brand-400 transition">Tiny (under 10 lbs)</button>
+            <button class="trait-chip px-4 py-2 rounded-full border border-slate-200 dark:border-slate-700 text-sm font-medium hover:border-brand-400 transition">Small (10-25 lbs)</button>
+            <button class="trait-chip px-4 py-2 rounded-full border border-slate-200 dark:border-slate-700 text-sm font-medium hover:border-brand-400 transition">Medium (25-50 lbs)</button>
+            <button class="trait-chip selected px-4 py-2 rounded-full border text-sm font-medium">Large (50-90 lbs)</button>
+            <button class="trait-chip px-4 py-2 rounded-full border border-slate-200 dark:border-slate-700 text-sm font-medium hover:border-brand-400 transition">Giant (90+ lbs)</button>
+          </div>
+        </div>
+
+        <!-- Social Behavior -->
+        <div class="mb-6">
+          <h3 class="text-sm font-semibold mb-3 text-slate-700 dark:text-slate-300">Social Behavior</h3>
+          <div class="flex flex-wrap gap-2">
+            <button class="trait-chip selected px-4 py-2 rounded-full border text-sm font-medium">Friendly with dogs</button>
+            <button class="trait-chip selected px-4 py-2 rounded-full border text-sm font-medium">Friendly with people</button>
+            <button class="trait-chip px-4 py-2 rounded-full border border-slate-200 dark:border-slate-700 text-sm font-medium hover:border-brand-400 transition">Friendly with kids</button>
+            <button class="trait-chip px-4 py-2 rounded-full border border-slate-200 dark:border-slate-700 text-sm font-medium hover:border-brand-400 transition">Shy / reserved</button>
+            <button class="trait-chip px-4 py-2 rounded-full border border-slate-200 dark:border-slate-700 text-sm font-medium hover:border-brand-400 transition">Protective</button>
+            <button class="trait-chip selected px-4 py-2 rounded-full border text-sm font-medium">Loves the park</button>
+          </div>
+        </div>
+
+        <!-- Training -->
+        <div class="mb-6">
+          <h3 class="text-sm font-semibold mb-3 text-slate-700 dark:text-slate-300">Training</h3>
+          <div class="flex flex-wrap gap-2">
+            <button class="trait-chip px-4 py-2 rounded-full border border-slate-200 dark:border-slate-700 text-sm font-medium hover:border-brand-400 transition">Untrained</button>
+            <button class="trait-chip px-4 py-2 rounded-full border border-slate-200 dark:border-slate-700 text-sm font-medium hover:border-brand-400 transition">Basic commands</button>
+            <button class="trait-chip selected px-4 py-2 rounded-full border text-sm font-medium">Well trained</button>
+            <button class="trait-chip px-4 py-2 rounded-full border border-slate-200 dark:border-slate-700 text-sm font-medium hover:border-brand-400 transition">Service / therapy dog</button>
+          </div>
+        </div>
+
+        <!-- Special Needs -->
+        <div class="mb-6">
+          <h3 class="text-sm font-semibold mb-3 text-slate-700 dark:text-slate-300">Special Needs</h3>
+          <div class="flex flex-wrap gap-2">
+            <button class="trait-chip px-4 py-2 rounded-full border border-slate-200 dark:border-slate-700 text-sm font-medium hover:border-brand-400 transition">None</button>
+            <button class="trait-chip px-4 py-2 rounded-full border border-slate-200 dark:border-slate-700 text-sm font-medium hover:border-brand-400 transition">Allergies</button>
+            <button class="trait-chip px-4 py-2 rounded-full border border-slate-200 dark:border-slate-700 text-sm font-medium hover:border-brand-400 transition">Dietary restrictions</button>
+            <button class="trait-chip px-4 py-2 rounded-full border border-slate-200 dark:border-slate-700 text-sm font-medium hover:border-brand-400 transition">Mobility issues</button>
+            <button class="trait-chip px-4 py-2 rounded-full border border-slate-200 dark:border-slate-700 text-sm font-medium hover:border-brand-400 transition">Anxiety</button>
+            <button class="trait-chip px-4 py-2 rounded-full border border-slate-200 dark:border-slate-700 text-sm font-medium hover:border-brand-400 transition">Senior dog</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- ==========================================
+           STEP 4: PERSONALITY (preview)
+           ========================================== -->
+      <!--
+      <div>
+        <h2 class="text-2xl font-bold mb-2">Describe Luna's personality</h2>
+        <p class="text-sm text-slate-500 mb-8">This helps our AI create Luna's digital voice. The more detail, the better!</p>
+        <div class="mb-6">
+          <label class="block text-sm font-medium mb-1.5">In a few sentences, how would you describe Luna?</label>
+          <textarea rows="4" placeholder="e.g., Luna is a goofy golden who loves belly rubs and chasing squirrels. She gets super excited when she sees other dogs and always tries to make friends. Her favorite activity is swimming at the lake." class="..."></textarea>
+        </div>
+        <div class="mb-6">
+          <label class="block text-sm font-medium mb-1.5">Luna's favorite things</label>
+          <input type="text" placeholder="e.g., tennis balls, peanut butter, car rides, belly rubs" class="...">
+        </div>
+        <div class="mb-6">
+          <label class="block text-sm font-medium mb-1.5">Luna's quirks</label>
+          <input type="text" placeholder="e.g., sleeps upside down, barks at the mailman, steals socks" class="...">
+        </div>
+      </div>
+      -->
+    </div>
+
+    <!-- Bottom Navigation -->
+    <div class="sticky bottom-0 bg-white dark:bg-slate-900 border-t border-slate-200 dark:border-slate-800 py-4">
+      <div class="max-w-2xl mx-auto px-4 flex items-center justify-between">
+        <button class="px-6 py-3 rounded-xl text-sm font-medium text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800 transition">
+          Back
+        </button>
+        <div class="flex items-center gap-2">
+          <span class="text-xs text-slate-400">Step 3 of 4</span>
+          <button class="px-8 py-3 rounded-xl bg-brand-600 text-white text-sm font-semibold hover:bg-brand-700 transition shadow-lg shadow-brand-500/25">
+            Continue
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</body>
+</html>

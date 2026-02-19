@@ -1,0 +1,716 @@
+// Prisma schema for "Commune" dog-centric social platform (MVP v2.0)
+// PostgreSQL 16+ with Prisma 5.x
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+// ──────────────────────────────────────────────
+// Enums
+// ──────────────────────────────────────────────
+
+enum UserRole {
+  USER
+  MODERATOR
+  ADMIN
+}
+
+enum PostVisibility {
+  PUBLIC
+  FOLLOWERS_ONLY
+}
+
+enum NotificationType {
+  LIKE
+  COMMENT
+  REPLY
+  FOLLOW
+  MENTION
+  REPOST
+}
+
+enum SubscriptionStatus {
+  ACTIVE
+  PAST_DUE
+  CANCELED
+  INCOMPLETE
+  TRIALING
+}
+
+enum ReportReason {
+  SPAM
+  HARASSMENT
+  HATE_SPEECH
+  VIOLENCE
+  NUDITY
+  MISINFORMATION
+  IMPERSONATION
+  ANIMAL_ABUSE
+  OTHER
+}
+
+enum ReportStatus {
+  PENDING
+  REVIEWED
+  RESOLVED
+  DISMISSED
+}
+
+enum ModerationAction {
+  WARN
+  MUTE
+  SUSPEND
+  BAN
+  CONTENT_REMOVE
+  CONTENT_HIDE
+}
+
+enum DogSize {
+  SMALL
+  MEDIUM
+  LARGE
+  EXTRA_LARGE
+}
+
+enum AllergySeverity {
+  MILD
+  MODERATE
+  SEVERE
+}
+
+enum AlertStatus {
+  ACTIVE
+  FOUND
+  CANCELLED
+}
+
+// ──────────────────────────────────────────────
+// User & Profile
+// ──────────────────────────────────────────────
+
+model User {
+  id             String   @id @default(cuid())
+  email          String   @unique
+  username       String   @unique
+  passwordHash   String?  @map("password_hash")
+  displayName    String   @map("display_name")
+  bio            String?  @db.VarChar(280)
+  avatarUrl      String?  @map("avatar_url")
+  isVerified     Boolean  @default(false) @map("is_verified")
+  isPremium      Boolean  @default(false) @map("is_premium")
+  role           UserRole @default(USER)
+  followerCount  Int      @default(0) @map("follower_count")
+  followingCount Int      @default(0) @map("following_count")
+  createdAt      DateTime @default(now()) @map("created_at")
+  updatedAt      DateTime @updatedAt @map("updated_at")
+  deletedAt      DateTime? @map("deleted_at")
+  emailVerifiedAt DateTime? @map("email_verified_at")
+
+  // Dog platform fields (v2.0)
+  hasDogs        Boolean  @default(false) @map("has_dogs")
+  primaryDogId   String?  @map("primary_dog_id")
+
+  // Relations
+  profile        Profile?
+  posts          Post[]
+  comments       Comment[]
+  likes          Like[]
+  bookmarks      Bookmark[]
+
+  followers      Follow[]  @relation("following")
+  following      Follow[]  @relation("follower")
+
+  blockedUsers   Block[]   @relation("blocker")
+  blockedBy      Block[]   @relation("blocked")
+
+  notificationsReceived  Notification[] @relation("notificationRecipient")
+  notificationsActed     Notification[] @relation("notificationActor")
+
+  subscription   Subscription?
+
+  reportsFiled       Report[] @relation("reporter")
+  reportsReceived    Report[] @relation("reportedUser")
+  moderationActions  ModerationLog[] @relation("moderationTarget")
+  moderationActionsBy ModerationLog[] @relation("moderator")
+
+  accounts       Account[]
+  sessions       Session[]
+
+  // Dog relations (v2.0)
+  dogs           Dog[]
+  primaryDog     Dog?      @relation("primaryDog", fields: [primaryDogId], references: [id], onDelete: SetNull)
+  submittedParks DogPark[] @relation("parkSubmitter")
+
+  @@index([email])
+  @@index([username])
+  @@index([createdAt])
+  @@map("users")
+}
+
+model Profile {
+  id            String   @id @default(cuid())
+  userId        String   @unique @map("user_id")
+  coverImageUrl String?  @map("cover_image_url")
+  website       String?
+  location      String?
+  birthday      DateTime? @db.Date
+  createdAt     DateTime @default(now()) @map("created_at")
+  updatedAt     DateTime @updatedAt @map("updated_at")
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@map("profiles")
+}
+
+// OAuth accounts for provider linking (used by custom JWT auth)
+model Account {
+  id                String  @id @default(cuid())
+  userId            String  @map("user_id")
+  type              String
+  provider          String
+  providerAccountId String  @map("provider_account_id")
+  refreshToken      String? @map("refresh_token") @db.Text
+  accessToken       String? @map("access_token") @db.Text
+  expiresAt         Int?    @map("expires_at")
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([provider, providerAccountId])
+  @@index([userId])
+  @@map("accounts")
+}
+
+model Session {
+  id           String   @id @default(cuid())
+  sessionToken String   @unique @map("session_token")
+  userId       String   @map("user_id")
+  expires      DateTime
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+  @@map("sessions")
+}
+
+model VerificationToken {
+  identifier String
+  token      String   @unique
+  expires    DateTime
+
+  @@unique([identifier, token])
+  @@map("verification_tokens")
+}
+
+// ──────────────────────────────────────────────
+// Dog Profiles & AI (v2.0)
+// ──────────────────────────────────────────────
+
+model Dog {
+  id               String    @id @default(cuid())
+  ownerId          String    @map("owner_id")
+  name             String
+  username         String    @unique
+  breed            String
+  dateOfBirth      DateTime? @map("date_of_birth") @db.Date
+  size             DogSize?
+  bio              String?   @db.VarChar(280)
+  avatarUrl        String?   @map("avatar_url")
+  coverUrl         String?   @map("cover_url")
+  personalityTraits String[] @default([]) @map("personality_traits")
+  temperamentNotes String?   @map("temperament_notes") @db.Text
+  isVerified       Boolean   @default(false) @map("is_verified")
+  followerCount    Int       @default(0) @map("follower_count")
+  followingCount   Int       @default(0) @map("following_count")
+  createdAt        DateTime  @default(now()) @map("created_at")
+  updatedAt        DateTime  @updatedAt @map("updated_at")
+  deletedAt        DateTime? @map("deleted_at")
+
+  // Relations
+  owner            User           @relation(fields: [ownerId], references: [id], onDelete: Cascade)
+  primaryForUsers  User[]         @relation("primaryDog")
+  aiConfig         DogAIConfig?
+  posts            Post[]
+  comments         Comment[]
+  likes            Like[]
+  notifications    Notification[]
+
+  // Social graph (dog-to-dog follows)
+  followers        Follow[]       @relation("followingDog")
+  following        Follow[]       @relation("followerDog")
+
+  // Medical records
+  vaccinations     Vaccination[]
+  vetVisits        VetVisit[]
+  medications      Medication[]
+  weightLogs       WeightLog[]
+  allergies        Allergy[]
+  medicalShareLinks MedicalShareLink[]
+
+  // Location
+  parkCheckIns     ParkCheckIn[]
+  lostDogAlerts    LostDogAlert[]
+
+  @@index([ownerId])
+  @@index([username])
+  @@index([breed])
+  @@index([ownerId, createdAt(sort: Desc)])
+  @@map("dogs")
+}
+
+model DogAIConfig {
+  id               String    @id @default(cuid())
+  dogId            String    @unique @map("dog_id")
+  systemPrompt     String    @map("system_prompt") @db.Text
+  modelId          String    @default("claude-sonnet-4-6") @map("model_id")
+  interactionsToday Int      @default(0) @map("interactions_today")
+  lastInteractionAt DateTime? @map("last_interaction_at")
+  createdAt        DateTime  @default(now()) @map("created_at")
+  updatedAt        DateTime  @updatedAt @map("updated_at")
+
+  dog Dog @relation(fields: [dogId], references: [id], onDelete: Cascade)
+
+  @@index([dogId])
+  @@map("dog_ai_configs")
+}
+
+// ──────────────────────────────────────────────
+// Dog Medical Records (v2.0)
+// ──────────────────────────────────────────────
+
+model Vaccination {
+  id               String    @id @default(cuid())
+  dogId            String    @map("dog_id")
+  name             String
+  dateAdministered DateTime  @map("date_administered") @db.Date
+  nextDueDate      DateTime? @map("next_due_date") @db.Date
+  vetName          String?   @map("vet_name")
+  notes            String?   @db.Text
+  createdAt        DateTime  @default(now()) @map("created_at")
+
+  dog Dog @relation(fields: [dogId], references: [id], onDelete: Cascade)
+
+  @@index([dogId])
+  @@index([dogId, nextDueDate])
+  @@map("vaccinations")
+}
+
+model VetVisit {
+  id             String    @id @default(cuid())
+  dogId          String    @map("dog_id")
+  date           DateTime  @db.Date
+  reason         String
+  diagnosis      String?   @db.Text
+  treatmentNotes String?   @map("treatment_notes") @db.Text
+  cost           Decimal?  @db.Decimal(10, 2)
+  createdAt      DateTime  @default(now()) @map("created_at")
+
+  dog Dog @relation(fields: [dogId], references: [id], onDelete: Cascade)
+
+  @@index([dogId])
+  @@index([dogId, date(sort: Desc)])
+  @@map("vet_visits")
+}
+
+model Medication {
+  id        String    @id @default(cuid())
+  dogId     String    @map("dog_id")
+  name      String
+  dosage    String
+  frequency String
+  startDate DateTime  @map("start_date") @db.Date
+  endDate   DateTime? @map("end_date") @db.Date
+  notes     String?   @db.Text
+  createdAt DateTime  @default(now()) @map("created_at")
+
+  dog Dog @relation(fields: [dogId], references: [id], onDelete: Cascade)
+
+  @@index([dogId])
+  @@index([dogId, startDate(sort: Desc)])
+  @@map("medications")
+}
+
+model WeightLog {
+  id        String   @id @default(cuid())
+  dogId     String   @map("dog_id")
+  weightKg  Decimal  @map("weight_kg") @db.Decimal(5, 2)
+  date      DateTime @db.Date
+  createdAt DateTime @default(now()) @map("created_at")
+
+  dog Dog @relation(fields: [dogId], references: [id], onDelete: Cascade)
+
+  @@index([dogId])
+  @@index([dogId, date(sort: Desc)])
+  @@map("weight_logs")
+}
+
+model Allergy {
+  id        String          @id @default(cuid())
+  dogId     String          @map("dog_id")
+  allergen  String
+  severity  AllergySeverity
+  notes     String?         @db.Text
+  createdAt DateTime        @default(now()) @map("created_at")
+
+  dog Dog @relation(fields: [dogId], references: [id], onDelete: Cascade)
+
+  @@index([dogId])
+  @@map("allergies")
+}
+
+model MedicalShareLink {
+  id        String    @id @default(cuid())
+  dogId     String    @map("dog_id")
+  token     String    @unique @default(uuid())
+  expiresAt DateTime  @map("expires_at")
+  createdAt DateTime  @default(now()) @map("created_at")
+  revokedAt DateTime? @map("revoked_at")
+
+  dog Dog @relation(fields: [dogId], references: [id], onDelete: Cascade)
+
+  @@index([dogId])
+  @@index([token])
+  @@map("medical_share_links")
+}
+
+// ──────────────────────────────────────────────
+// Location & Parks (v2.0)
+// ──────────────────────────────────────────────
+
+model DogPark {
+  id               String   @id @default(cuid())
+  name             String
+  latitude         Float
+  longitude        Float
+  address          String?
+  submittedByUserId String? @map("submitted_by_user_id")
+  verified         Boolean  @default(false)
+  createdAt        DateTime @default(now()) @map("created_at")
+
+  submittedByUser  User?         @relation("parkSubmitter", fields: [submittedByUserId], references: [id], onDelete: SetNull)
+  checkIns         ParkCheckIn[]
+
+  @@index([latitude, longitude])
+  @@index([verified])
+  @@map("dog_parks")
+}
+
+model ParkCheckIn {
+  id           String    @id @default(cuid())
+  dogId        String    @map("dog_id")
+  parkId       String    @map("park_id")
+  checkedInAt  DateTime  @default(now()) @map("checked_in_at")
+  checkedOutAt DateTime? @map("checked_out_at")
+
+  dog  Dog     @relation(fields: [dogId], references: [id], onDelete: Cascade)
+  park DogPark @relation(fields: [parkId], references: [id], onDelete: Cascade)
+
+  @@index([dogId])
+  @@index([parkId])
+  @@index([parkId, checkedInAt(sort: Desc)])
+  @@map("park_check_ins")
+}
+
+model LostDogAlert {
+  id                String      @id @default(cuid())
+  dogId             String      @map("dog_id")
+  lastSeenLatitude  Float       @map("last_seen_latitude")
+  lastSeenLongitude Float       @map("last_seen_longitude")
+  lastSeenAt        DateTime    @map("last_seen_at")
+  description       String      @db.Text
+  status            AlertStatus @default(ACTIVE)
+  createdAt         DateTime    @default(now()) @map("created_at")
+  resolvedAt        DateTime?   @map("resolved_at")
+
+  dog Dog @relation(fields: [dogId], references: [id], onDelete: Cascade)
+
+  @@index([dogId])
+  @@index([status])
+  @@index([status, lastSeenLatitude, lastSeenLongitude])
+  @@index([createdAt(sort: Desc)])
+  @@map("lost_dog_alerts")
+}
+
+// ──────────────────────────────────────────────
+// Posts & Content
+// ──────────────────────────────────────────────
+
+model Post {
+  id             String         @id @default(cuid())
+  content        String         @db.VarChar(2000)
+  authorId       String         @map("author_id")
+  mediaUrls      String[]       @default([]) @map("media_urls")
+  visibility     PostVisibility @default(PUBLIC)
+  isEdited       Boolean        @default(false) @map("is_edited")
+  likesCount     Int            @default(0) @map("likes_count")
+  commentsCount  Int            @default(0) @map("comments_count")
+  sharesCount    Int            @default(0) @map("shares_count")
+  createdAt      DateTime       @default(now()) @map("created_at")
+  updatedAt      DateTime       @updatedAt @map("updated_at")
+  deletedAt      DateTime?      @map("deleted_at")
+
+  // Repost support
+  repostOfId     String?        @map("repost_of_id")
+  repostOf       Post?          @relation("reposts", fields: [repostOfId], references: [id], onDelete: SetNull)
+  reposts        Post[]         @relation("reposts")
+
+  // Dog platform fields (v2.0)
+  dogId          String?        @map("dog_id")
+  aiAssisted     Boolean        @default(false) @map("ai_assisted")
+  aiModelUsed    String?        @map("ai_model_used")
+
+  // Relations
+  author         User           @relation(fields: [authorId], references: [id], onDelete: Cascade)
+  dog            Dog?           @relation(fields: [dogId], references: [id], onDelete: SetNull)
+  comments       Comment[]
+  likes          Like[]
+  bookmarks      Bookmark[]
+  postHashtags   PostHashtag[]
+
+  @@index([authorId])
+  @@index([createdAt(sort: Desc)])
+  @@index([authorId, createdAt(sort: Desc)])
+  @@index([repostOfId])
+  @@index([dogId])
+  @@index([dogId, createdAt(sort: Desc)])
+  @@map("posts")
+}
+
+model Comment {
+  id            String   @id @default(cuid())
+  content       String   @db.VarChar(500)
+  authorId      String   @map("author_id")
+  postId        String   @map("post_id")
+  parentId      String?  @map("parent_id")
+  likesCount    Int      @default(0) @map("likes_count")
+  createdAt     DateTime @default(now()) @map("created_at")
+  updatedAt     DateTime @updatedAt @map("updated_at")
+  deletedAt     DateTime? @map("deleted_at")
+
+  // Dog platform fields (v2.0)
+  dogId         String?  @map("dog_id")
+
+  // Relations
+  author   User      @relation(fields: [authorId], references: [id], onDelete: Cascade)
+  post     Post      @relation(fields: [postId], references: [id], onDelete: Cascade)
+  parent   Comment?  @relation("commentReplies", fields: [parentId], references: [id], onDelete: SetNull)
+  replies  Comment[] @relation("commentReplies")
+  dog      Dog?      @relation(fields: [dogId], references: [id], onDelete: SetNull)
+
+  @@index([postId, createdAt(sort: Desc)])
+  @@index([authorId])
+  @@index([parentId])
+  @@index([dogId])
+  @@map("comments")
+}
+
+model Like {
+  id        String   @id @default(cuid())
+  userId    String   @map("user_id")
+  postId    String   @map("post_id")
+  createdAt DateTime @default(now()) @map("created_at")
+
+  // Dog platform fields (v2.0)
+  dogId     String?  @map("dog_id")
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+  post Post @relation(fields: [postId], references: [id], onDelete: Cascade)
+  dog  Dog? @relation(fields: [dogId], references: [id], onDelete: SetNull)
+
+  @@unique([userId, postId])
+  @@index([postId])
+  @@index([userId])
+  @@index([dogId])
+  @@map("likes")
+}
+
+model Bookmark {
+  id        String   @id @default(cuid())
+  userId    String   @map("user_id")
+  postId    String   @map("post_id")
+  createdAt DateTime @default(now()) @map("created_at")
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+  post Post @relation(fields: [postId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, postId])
+  @@index([userId, createdAt(sort: Desc)])
+  @@map("bookmarks")
+}
+
+// ──────────────────────────────────────────────
+// Social Graph
+// ──────────────────────────────────────────────
+
+model Follow {
+  id          String   @id @default(cuid())
+  followerId  String   @map("follower_id")
+  followingId String   @map("following_id")
+  createdAt   DateTime @default(now()) @map("created_at")
+
+  // Dog-to-dog follow fields (v2.0)
+  followerDogId  String? @map("follower_dog_id")
+  followingDogId String? @map("following_dog_id")
+
+  follower  User @relation("follower", fields: [followerId], references: [id], onDelete: Cascade)
+  following User @relation("following", fields: [followingId], references: [id], onDelete: Cascade)
+
+  // Dog relations (v2.0)
+  followerDog  Dog? @relation("followerDog", fields: [followerDogId], references: [id], onDelete: SetNull)
+  followingDog Dog? @relation("followingDog", fields: [followingDogId], references: [id], onDelete: SetNull)
+
+  @@unique([followerId, followingId])
+  @@index([followerId])
+  @@index([followingId])
+  @@index([followerDogId])
+  @@index([followingDogId])
+  @@index([followerDogId, followingDogId])
+  @@map("follows")
+}
+
+model Block {
+  id        String   @id @default(cuid())
+  blockerId String   @map("blocker_id")
+  blockedId String   @map("blocked_id")
+  createdAt DateTime @default(now()) @map("created_at")
+
+  blocker User @relation("blocker", fields: [blockerId], references: [id], onDelete: Cascade)
+  blocked User @relation("blocked", fields: [blockedId], references: [id], onDelete: Cascade)
+
+  @@unique([blockerId, blockedId])
+  @@index([blockerId])
+  @@index([blockedId])
+  @@map("blocks")
+}
+
+// ──────────────────────────────────────────────
+// Notifications
+// ──────────────────────────────────────────────
+
+model Notification {
+  id          String           @id @default(cuid())
+  type        NotificationType
+  recipientId String           @map("recipient_id")
+  actorId     String?          @map("actor_id")
+  targetId    String?          @map("target_id")
+  targetType  String?          @map("target_type")
+  read        Boolean          @default(false)
+  createdAt   DateTime         @default(now()) @map("created_at")
+
+  // Dog context (v2.0)
+  dogId       String?          @map("dog_id")
+
+  recipient User  @relation("notificationRecipient", fields: [recipientId], references: [id], onDelete: Cascade)
+  actor     User? @relation("notificationActor", fields: [actorId], references: [id], onDelete: SetNull)
+  dog       Dog?  @relation(fields: [dogId], references: [id], onDelete: SetNull)
+
+  @@index([recipientId, read, createdAt(sort: Desc)])
+  @@index([recipientId, createdAt(sort: Desc)])
+  @@index([actorId])
+  @@index([dogId])
+  @@map("notifications")
+}
+
+// ──────────────────────────────────────────────
+// Subscriptions & Payments
+// ──────────────────────────────────────────────
+
+model Subscription {
+  id               String             @id @default(cuid())
+  userId           String             @unique @map("user_id")
+  stripeCustomerId String             @unique @map("stripe_customer_id")
+  stripeSubscriptionId String?        @unique @map("stripe_subscription_id")
+  stripePriceId    String?            @map("stripe_price_id")
+  status           SubscriptionStatus @default(INCOMPLETE)
+  currentPeriodStart DateTime?        @map("current_period_start")
+  currentPeriodEnd   DateTime?        @map("current_period_end")
+  cancelAtPeriodEnd  Boolean          @default(false) @map("cancel_at_period_end")
+  createdAt        DateTime           @default(now()) @map("created_at")
+  updatedAt        DateTime           @updatedAt @map("updated_at")
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([stripeCustomerId])
+  @@index([status])
+  @@map("subscriptions")
+}
+
+// ──────────────────────────────────────────────
+// Hashtags
+// ──────────────────────────────────────────────
+
+model Hashtag {
+  id         String @id @default(cuid())
+  name       String @unique
+  postsCount Int    @default(0) @map("posts_count")
+
+  postHashtags PostHashtag[]
+
+  @@index([name])
+  @@index([postsCount(sort: Desc)])
+  @@map("hashtags")
+}
+
+model PostHashtag {
+  id        String @id @default(cuid())
+  postId    String @map("post_id")
+  hashtagId String @map("hashtag_id")
+
+  post    Post    @relation(fields: [postId], references: [id], onDelete: Cascade)
+  hashtag Hashtag @relation(fields: [hashtagId], references: [id], onDelete: Cascade)
+
+  @@unique([postId, hashtagId])
+  @@index([hashtagId])
+  @@index([postId])
+  @@map("post_hashtags")
+}
+
+// ──────────────────────────────────────────────
+// Moderation
+// ──────────────────────────────────────────────
+
+model Report {
+  id           String       @id @default(cuid())
+  reporterId   String       @map("reporter_id")
+  targetType   String       @map("target_type")
+  targetId     String       @map("target_id")
+  reportedUserId String?    @map("reported_user_id")
+  reason       ReportReason
+  description  String?      @db.VarChar(1000)
+  status       ReportStatus @default(PENDING)
+  moderatorId  String?      @map("moderator_id")
+  resolvedAt   DateTime?    @map("resolved_at")
+  createdAt    DateTime     @default(now()) @map("created_at")
+  updatedAt    DateTime     @updatedAt @map("updated_at")
+
+  reporter     User  @relation("reporter", fields: [reporterId], references: [id], onDelete: Cascade)
+  reportedUser User? @relation("reportedUser", fields: [reportedUserId], references: [id], onDelete: SetNull)
+
+  @@index([status, createdAt])
+  @@index([reporterId])
+  @@index([reportedUserId])
+  @@index([targetType, targetId])
+  @@map("reports")
+}
+
+model ModerationLog {
+  id         String           @id @default(cuid())
+  targetId   String           @map("target_id")
+  moderatorId String          @map("moderator_id")
+  action     ModerationAction
+  reason     String?          @db.VarChar(500)
+  expiresAt  DateTime?        @map("expires_at")
+  createdAt  DateTime         @default(now()) @map("created_at")
+
+  target    User @relation("moderationTarget", fields: [targetId], references: [id], onDelete: Cascade)
+  moderator User @relation("moderator", fields: [moderatorId], references: [id], onDelete: Cascade)
+
+  @@index([targetId])
+  @@index([moderatorId])
+  @@index([createdAt(sort: Desc)])
+  @@map("moderation_logs")
+}
