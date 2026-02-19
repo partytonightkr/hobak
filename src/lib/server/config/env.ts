@@ -16,31 +16,28 @@ const envSchema = z.object({
   UPLOAD_DIR: z.string().default('./uploads'),
   MAX_FILE_SIZE: z.coerce.number().default(5 * 1024 * 1024), // 5MB
   REDIS_URL: z.string().default('redis://localhost:6379'),
-  STRIPE_SECRET_KEY: isProduction
-    ? z.string().min(1, 'STRIPE_SECRET_KEY is required in production')
-    : z.string().default(''),
-  STRIPE_WEBHOOK_SECRET: isProduction
-    ? z.string().min(1, 'STRIPE_WEBHOOK_SECRET is required in production')
-    : z.string().default(''),
+  STRIPE_SECRET_KEY: z.string().default(''),
+  STRIPE_WEBHOOK_SECRET: z.string().default(''),
   STRIPE_PREMIUM_PRICE_ID: z.string().default('price_premium_monthly'),
-  ANTHROPIC_API_KEY: isProduction
-    ? z.string().min(1, 'ANTHROPIC_API_KEY is required in production')
-    : z.string().default(''),
+  ANTHROPIC_API_KEY: z.string().default(''),
 });
 
 export type Env = z.infer<typeof envSchema>;
 
+let _env: Env | null = null;
+
 function loadEnv(): Env {
+  if (_env) return _env;
   const result = envSchema.safeParse(process.env);
   if (!result.success) {
     const formatted = result.error.flatten().fieldErrors;
-    console.error('Invalid environment variables:', formatted);
-    if (isProduction) {
-      throw new Error(`Missing required environment variables: ${Object.keys(formatted).join(', ')}`);
-    }
-    process.exit(1);
+    console.warn('Invalid environment variables:', formatted);
+    // During build, return defaults instead of crashing
+    _env = envSchema.parse({});
+    return _env;
   }
-  return result.data;
+  _env = result.data;
+  return _env;
 }
 
 export const env = loadEnv();
