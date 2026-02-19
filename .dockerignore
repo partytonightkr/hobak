@@ -8,3 +8,7 @@ dist
 !.env.example
 design/
 docs/
+uploads/
+.github/
+.vscode/
+.idea/
