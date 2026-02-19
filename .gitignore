@@ -18,9 +18,9 @@ build/
 .env.test.local
 .env.production.local
 
-# Uploads
-uploads/
-!uploads/.gitkeep
+# Uploads (root-level user uploads, not src/app/api route handlers)
+/uploads/
+!/uploads/.gitkeep
 
 # IDE
 .vscode/
