@@ -72,98 +72,93 @@ export default function LandingPage() {
             </div>
           </div>
 
-          {/* ── Floating collage — right side of left panel ── */}
-          <div className="pointer-events-none absolute inset-0 bottom-[35%] hidden lg:block">
-            <div className="relative ml-auto h-full w-full max-w-[540px]">
+          {/* ── Floating collage — right side, vertically centered, overlapping ── */}
+          <div className="pointer-events-none absolute inset-0 bottom-[30%] hidden lg:flex items-center justify-end pr-8">
+            {/* Collage cluster — fixed size, elements overlap tightly */}
+            <div className="relative h-[480px] w-[420px]">
 
-              {/* Main phone card — large dog photo */}
-              <div className="absolute right-0 top-[4%] h-[320px] w-[210px] rotate-2 rounded-3xl border border-surface-200/60 bg-white shadow-2xl dark:border-surface-700 dark:bg-surface-800">
+              {/* Layer 1: Main phone card — largest, back-right (anchor) */}
+              <div className="absolute right-0 top-0 z-10 h-[400px] w-[260px] rounded-3xl border border-surface-200/60 bg-white shadow-2xl dark:border-surface-700 dark:bg-surface-800">
                 <div className="mx-auto mt-3 h-1.5 w-16 rounded-full bg-surface-200 dark:bg-surface-600" />
-                <div className="relative mx-3 mt-3 h-[200px] overflow-hidden rounded-2xl">
+                <div className="relative mx-3 mt-3 h-[260px] overflow-hidden rounded-2xl">
                   {/* eslint-disable-next-line @next/next/no-img-element */}
                   <img src="/images/landing/dog1.jpg" alt="Happy golden retriever" className="h-full w-full object-cover" />
                 </div>
-                <div className="absolute right-4 top-12 flex items-center gap-1 rounded-full bg-primary-600 px-2.5 py-1 text-[11px] font-medium text-white shadow-md">
+                {/* Time badge */}
+                <div className="absolute right-4 top-12 z-20 flex items-center gap-1 rounded-full bg-primary-600 px-2.5 py-1 text-[11px] font-medium text-white shadow-md">
                   <svg className="h-3 w-3" fill="currentColor" viewBox="0 0 24 24"><path d="M12 2C6.5 2 2 6.5 2 12s4.5 10 10 10 10-4.5 10-10S17.5 2 12 2zm4.2 14.2L11 13V7h1.5v5.2l4.5 2.7-.8 1.3z" /></svg>
                   16:45
                 </div>
                 <div className="mx-4 mt-3 flex items-center gap-2">
-                  <div className="h-7 w-7 overflow-hidden rounded-full">
+                  <div className="h-8 w-8 overflow-hidden rounded-full">
                     {/* eslint-disable-next-line @next/next/no-img-element */}
                     <img src="/images/landing/dog3.jpg" alt="" className="h-full w-full object-cover" />
                   </div>
                   <div>
-                    <div className="h-2.5 w-16 rounded bg-surface-200 dark:bg-surface-600" />
-                    <div className="mt-1 h-2 w-12 rounded bg-surface-100 dark:bg-surface-700" />
+                    <div className="h-2.5 w-20 rounded bg-surface-200 dark:bg-surface-600" />
+                    <div className="mt-1 h-2 w-14 rounded bg-surface-100 dark:bg-surface-700" />
                   </div>
                 </div>
-                <div className="mx-auto mt-2 flex items-center justify-center gap-2">
-                  <div className="h-2 w-7 rounded-full bg-surface-300" />
-                  <div className="h-2 w-2 rounded-full bg-surface-200" />
-                  <div className="h-2 w-2 rounded-full bg-surface-200" />
+                <div className="mx-auto mt-3 flex items-center justify-center gap-2">
+                  <div className="h-2.5 w-8 rounded-full bg-surface-300" />
+                  <div className="h-2.5 w-2.5 rounded-full bg-surface-200" />
+                  <div className="h-2.5 w-2.5 rounded-full bg-surface-200" />
                 </div>
               </div>
 
-              {/* Small reel card — dog running */}
-              <div className="absolute left-[2%] top-[10%] h-[180px] w-[140px] -rotate-6 overflow-hidden rounded-2xl shadow-xl">
+              {/* Layer 2: Reel card — overlaps left side of main card */}
+              <div className="absolute left-0 top-[60px] z-20 h-[220px] w-[170px] -rotate-3 overflow-hidden rounded-2xl shadow-xl">
                 {/* eslint-disable-next-line @next/next/no-img-element */}
                 <img src="/images/landing/dog2.jpg" alt="Two dogs running on a beach" className="h-full w-full object-cover" />
-                <div className="absolute left-2 top-2 flex h-7 w-7 items-center justify-center rounded-lg bg-primary-600/90 shadow">
-                  <svg className="h-4 w-4 text-white" fill="currentColor" viewBox="0 0 24 24"><path d="M4 6H2v14c0 1.1.9 2 2 2h14v-2H4V6zm16-4H8c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zm-8 12.5v-9l6 4.5-6 4.5z" /></svg>
+                <div className="absolute left-2.5 top-2.5 flex h-8 w-8 items-center justify-center rounded-lg bg-primary-600/90 shadow">
+                  <svg className="h-4.5 w-4.5 text-white" fill="currentColor" viewBox="0 0 24 24"><path d="M4 6H2v14c0 1.1.9 2 2 2h14v-2H4V6zm16-4H8c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zm-8 12.5v-9l6 4.5-6 4.5z" /></svg>
                 </div>
               </div>
 
-              {/* Paw emoji reaction */}
-              <div className="absolute left-[28%] top-[3%] flex h-11 w-11 items-center justify-center rounded-full bg-amber-400 text-xl shadow-lg">
-                🐾
-              </div>
-
-              {/* Heart reaction */}
-              <div className="absolute right-[-2%] top-[58%] flex h-11 w-11 items-center justify-center rounded-full bg-rose-400 shadow-lg">
-                <svg className="h-6 w-6 text-white" fill="currentColor" viewBox="0 0 24 24">
-                  <path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z" />
-                </svg>
-              </div>
-
-              {/* Post card with dog photo */}
-              <div className="absolute left-[0%] top-[46%] w-[180px] -rotate-2 rounded-2xl border border-surface-200/60 bg-white p-3 shadow-xl dark:border-surface-700 dark:bg-surface-800">
+              {/* Layer 3: Post card — overlaps bottom-left of main card */}
+              <div className="absolute bottom-[60px] left-[30px] z-30 w-[200px] rotate-1 rounded-2xl border border-surface-200/60 bg-white p-3 shadow-xl dark:border-surface-700 dark:bg-surface-800">
                 <div className="flex items-center gap-2">
-                  <div className="h-6 w-6 overflow-hidden rounded-full">
-                    {/* eslint-disable-next-line @next/next/no-img-element */}
-                    <img src="/images/landing/dog4.jpg" alt="" className="h-full w-full object-cover" />
+                  <div className="flex h-7 w-7 items-center justify-center rounded-lg bg-primary-600/90">
+                    <svg className="h-4 w-4 text-white" fill="currentColor" viewBox="0 0 24 24"><path d="M4 6H2v14c0 1.1.9 2 2 2h14v-2H4V6zm16-4H8c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zm-8 12.5v-9l6 4.5-6 4.5z" /></svg>
                   </div>
-                  <div className="h-2.5 w-16 rounded bg-surface-200 dark:bg-surface-600" />
                 </div>
-                <div className="mt-2 h-[70px] overflow-hidden rounded-xl">
+                <div className="mt-2.5 h-[90px] overflow-hidden rounded-xl">
                   {/* eslint-disable-next-line @next/next/no-img-element */}
                   <img src="/images/landing/dog5.jpg" alt="Cute puppy" className="h-full w-full object-cover" />
                 </div>
-                <div className="mt-2 flex gap-2">
-                  <div className="h-4 w-10 rounded-full bg-surface-100 dark:bg-surface-700" />
-                  <div className="h-4 w-10 rounded-full bg-surface-100 dark:bg-surface-700" />
-                  <div className="h-4 w-10 rounded-full bg-surface-100 dark:bg-surface-700" />
+                <div className="mt-2.5 flex gap-3">
+                  <div className="h-5 w-14 rounded-full bg-surface-100 dark:bg-surface-700" />
+                  <div className="h-5 w-5 rounded-full bg-surface-100 dark:bg-surface-700" />
+                  <div className="h-5 w-5 rounded-full bg-surface-100 dark:bg-surface-700" />
+                </div>
+                <div className="mt-2 space-y-1.5">
+                  <div className="h-2.5 w-[80%] rounded bg-surface-200 dark:bg-surface-600" />
+                  <div className="h-2.5 w-[60%] rounded bg-surface-100 dark:bg-surface-700" />
                 </div>
               </div>
 
-              {/* Story circle — dog face */}
-              <div className="absolute left-[38%] top-[56%]">
+              {/* Layer 4: Story circle — overlaps bottom-center */}
+              <div className="absolute bottom-0 left-[140px] z-40">
                 <div className="rounded-full bg-gradient-to-tr from-primary-400 to-primary-600 p-[3px] shadow-xl">
-                  <div className="h-[80px] w-[80px] overflow-hidden rounded-full border-[3px] border-white dark:border-surface-900">
+                  <div className="h-[100px] w-[100px] overflow-hidden rounded-full border-[3px] border-white dark:border-surface-900">
                     {/* eslint-disable-next-line @next/next/no-img-element */}
                     <img src="/images/landing/dog3.jpg" alt="Dog profile" className="h-full w-full object-cover" />
                   </div>
                 </div>
               </div>
 
-              {/* Dog bone floating icon */}
-              <div className="absolute left-[12%] top-[3%] flex h-10 w-10 items-center justify-center rounded-xl bg-amber-100 text-lg shadow-lg dark:bg-amber-900/40">
-                🦴
+              {/* Floating: Paw emoji — top-left */}
+              <div className="absolute -left-[10px] top-[10px] z-30 flex h-12 w-12 items-center justify-center rounded-full bg-amber-400 text-2xl shadow-lg">
+                🐾
               </div>
 
-              {/* Woof! speech bubble */}
-              <div className="absolute left-[38%] top-[8%] rounded-2xl rounded-bl-sm bg-white px-4 py-2 text-sm font-semibold text-surface-700 shadow-lg dark:bg-surface-800 dark:text-surface-200">
-                {locale === "ko" ? "멍멍! 🐕" : "Woof! 🐕"}
+              {/* Floating: Heart reaction — right of main card */}
+              <div className="absolute right-[-10px] top-[310px] z-30 flex h-12 w-12 items-center justify-center rounded-full bg-gradient-to-br from-rose-400 to-rose-500 shadow-lg">
+                <svg className="h-7 w-7 text-white" fill="currentColor" viewBox="0 0 24 24">
+                  <path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z" />
+                </svg>
               </div>
+
             </div>
           </div>
 
